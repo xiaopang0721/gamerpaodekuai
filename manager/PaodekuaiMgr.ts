@@ -16,7 +16,7 @@ module gamepaodekuai.manager {
 		CARDS_TYPE_FOUR_FEIJI = 10, //四连飞机
 	}
 	const MIN_CHECKTIME: number = 1000;//最小检测时间间隔(毫秒)
-	
+
 	export class PaodekuaiMgr extends gamecomponent.managers.PlayingCardMgrBase<PaodekuaiData>{
 		public isReLogin: boolean;		//是否断线重连，各种判断操作用的
 		public isShowCards: boolean = false;	//是否翻牌
@@ -810,11 +810,11 @@ module gamepaodekuai.manager {
 		}
 
 		//充值弹框
-		alert(str: string, ecb: Function = null, ccb: Function = null, isOnlyOK: boolean = true, okSkin?: string): void {
+		alert(str: string, ecb: Function = null, ccb: Function = null, isOnlyOK: boolean = true, okSkin?: string, titleSkin?: string, cancleSkin?: string): void {
 			if (!this._game.uiRoot.general.isOpened(TongyongPageDef.PAGE_TONGYONG_TIPS)) {
 				this._game.uiRoot.general.open(TongyongPageDef.PAGE_TONGYONG_TIPS, (tip: TongyongTipsPage) => {
 					tip.isOnlyOK = isOnlyOK;
-					tip.setInfo(str, ecb, ccb, okSkin);
+					tip.setInfo(str, ecb, ccb, okSkin, titleSkin, cancleSkin);
 				});
 			}
 		}
