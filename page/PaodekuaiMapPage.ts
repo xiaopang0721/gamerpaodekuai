@@ -20,10 +20,10 @@ module gamepaodekuai.page {
     const MONEY_FLY_TIME = 50; // 金币飞行时间间隔
 
     export class PaodekuaiMapPage extends game.gui.base.Page {
-        private _viewUI: ui.game_ui.paodekuai.PaoDeKuaiUI;
-        private _feijiView: ui.game_ui.paodekuai.component.feijiUI;
-        private _shunZiView: ui.game_ui.paodekuai.component.shunziUI;
-        private _bombView: ui.game_ui.paodekuai.component.boomUI;
+        private _viewUI: ui.nqp.game_ui.paodekuai.PaoDeKuaiUI;
+        private _feijiView: ui.nqp.game_ui.paodekuai.component.feijiUI;
+        private _shunZiView: ui.nqp.game_ui.paodekuai.component.shunziUI;
+        private _bombView: ui.nqp.game_ui.paodekuai.component.boomUI;
         private _mapInfo: PaodekuaiMapInfo;
         private _paodekuaiMgr: PaodekuaiMgr;
         private _paodekuaiStory: any;
@@ -79,9 +79,9 @@ module gamepaodekuai.page {
         // 页面初始化函数
         protected init(): void {
             this._viewUI = this.createView('game_ui.paodekuai.PaoDeKuaiUI');
-            this._feijiView = new ui.game_ui.paodekuai.component.feijiUI();
-            this._shunZiView = new ui.game_ui.paodekuai.component.shunziUI();
-            this._bombView = new ui.game_ui.paodekuai.component.boomUI();
+            this._feijiView = new ui.nqp.game_ui.paodekuai.component.feijiUI();
+            this._shunZiView = new ui.nqp.game_ui.paodekuai.component.shunziUI();
+            this._bombView = new ui.nqp.game_ui.paodekuai.component.boomUI();
             this.addChild(this._viewUI);
             this._pageHandle = PageHandle.Get("PaodekuaiMapPage");//额外界面控制器
             if (!this._paodekuaiMgr) {

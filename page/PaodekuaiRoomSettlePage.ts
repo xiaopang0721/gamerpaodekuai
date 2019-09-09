@@ -3,7 +3,7 @@
 */
 module gamepaodekuai.page {
     export class PaodekuaiRoomSettlePage extends game.gui.base.Page {
-        private _viewUI: ui.game_ui.paodekuai.JieSuan_FangKaUI;
+        private _viewUI: ui.nqp.game_ui.paodekuai.JieSuan_FangKaUI;
         private _isGameEnd: boolean = false;  //是否结束
 
         constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {

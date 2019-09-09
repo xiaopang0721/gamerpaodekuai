@@ -3,7 +3,7 @@
 */
 module gamepaodekuai.page {
 	export class PaodekuaiPage extends game.gui.base.Page {
-		private _viewUI: ui.game_ui.paodekuai.PaoDeKuai_HUDUI;
+		private _viewUI: ui.nqp.game_ui.paodekuai.PaoDeKuai_HUDUI;
 		private _player: any;
 		private _paodekuaiMgr: PaodekuaiMgr;
 		private _isRoomcardType: boolean = false;
