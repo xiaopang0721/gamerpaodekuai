@@ -538,7 +538,7 @@ module gamepaodekuai.page {
             if (this._isPlaying) {
                 TongyongPageDef.ins.alertRecharge(StringU.substitute("游戏中禁止退出，请先完成本轮" + this._mapInfo.GetCardRoomGameNumber() + "局游戏哦~~"), () => {
                 }, () => {
-                }, true, PathGameTongyong.ui_tongyong_general + "btn_qd.png");
+                }, true, TongyongPageDef.TIPS_SKIN_STR['qd']);
                 return false;
             }
             return !this._isPlaying;
@@ -1565,13 +1565,13 @@ module gamepaodekuai.page {
             if (mainUnit.GetRoomMaster() != 1) {
                 TongyongPageDef.ins.alertRecharge(StringU.substitute("只有房主才可以选择开始游戏哦"), () => {
                 }, () => {
-                }, true, PathGameTongyong.ui_tongyong_general + "btn_qd.png");
+                }, true, TongyongPageDef.TIPS_SKIN_STR['qd']);
                 return;
             }
             if (this.getUnitCount() < this._unitCounts) {
                 TongyongPageDef.ins.alertRecharge(StringU.substitute("老板，再等等嘛，需要" + this._unitCounts + "个人才可以开始"), () => {
                 }, () => {
-                }, true, PathGameTongyong.ui_tongyong_general + "btn_qd.png");
+                }, true, TongyongPageDef.TIPS_SKIN_STR['qd']);
                 return;
             }
             this._paodekuaiStory.startRoomCardGame(mainUnit.guid, this._mapInfo.GetCardRoomId());
@@ -1584,7 +1584,7 @@ module gamepaodekuai.page {
             if (mainUnit.GetRoomMaster() != 1) {
                 TongyongPageDef.ins.alertRecharge(StringU.substitute("只有房主才可以解散房间哦"), () => {
                 }, () => {
-                }, true, PathGameTongyong.ui_tongyong_general + "btn_qd.png");
+                }, true, TongyongPageDef.TIPS_SKIN_STR['qd']);
             } else {
                 if (!this._isGameEnd) {
                     TongyongPageDef.ins.alertRecharge("游戏未开始，解散房间不会扣除金币！\n是否解散房间？", () => {
