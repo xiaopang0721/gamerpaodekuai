@@ -93,6 +93,7 @@ module gamepaodekuai.page {
                 this._paodekuaiMgr = this._paodekuaiStory.paodekuaiMgr;
             }
             this._game.playMusic(Path.music + "paodekuai/pdk_BGM.mp3");
+            this._viewUI.btn_menu.left = this._game.isFullScreen ? 25 : 10;
         }
 
         // 页面打开时执行函数
