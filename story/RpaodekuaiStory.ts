@@ -1,7 +1,7 @@
 /**
-* name 跑得快-剧情
+* 跑得快
 */
-module gamepaodekuai.story {
+module gamerpaodekuai.story {
 	const enum MAP_STATUS {
 		MAP_STATE_NONE = 0,			//初始化
 		MAP_STATE_CARDROOM_CREATED = 1,  	//房间创建后
@@ -17,26 +17,25 @@ module gamepaodekuai.story {
 		MAP_STATE_END = 11,			//结束
 	}
 
-	export class PaodekuaiStory extends gamecomponent.story.StoryNormalBase {
-		private _paodekuaiMgr: PaodekuaiMgr;
+	export class RpaodekuaiStory extends gamecomponent.story.StoryRoomCardBase {
+		private _paodekuaiMgr: RpaodekuaiMgr;
 		private _cardsTemp: any = [];
-		private _paodekuaiMapInfo: PaodekuaiMapInfo;
+		private _paodekuaiMapInfo: RpaodekuaiMapInfo;
 		private _battleIndex = -1;
 
-		constructor(v: Game, mapid: string, maplv: number) {
-			super(v, mapid, maplv);
+		constructor(v: Game, mapid: string, maplv: number, dataSource: any) {
+			super(v, mapid, maplv, dataSource);
 			this.init();
 		}
 
 		init() {
 			if (!this._paodekuaiMgr) {
-				this._paodekuaiMgr = new PaodekuaiMgr(this._game);
+				this._paodekuaiMgr = new RpaodekuaiMgr(this._game);
 			}
 			this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_LOAD_MAP, this, this.onIntoNewMap);
 			this._game.sceneObjectMgr.on(SceneObjectMgr.EVENT_MAPINFO_CHANGE, this, this.onMapInfoChange);
-			this._game.sceneObjectMgr.on(PaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK, this, this.updateBattledInfo);
-			this.onIntoNewMap();
-			super.init();
+			this._game.sceneObjectMgr.on(RpaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK, this, this.updateBattledInfo);
+
 		}
 
 		get paodekuaiMgr() {
@@ -56,31 +55,29 @@ module gamepaodekuai.story {
 
 			this.onMapInfoChange();
 			this._game.uiRoot.closeAll();
-			this._game.uiRoot.HUD.open(PaodekuaiPageDef.PAGE_PDK_MAP);
+			this._game.uiRoot.HUD.open(RpaodekuaiPageDef.PAGE_PDK_MAP);
 		}
 
 		private onMapInfoChange(): void {
 			let mapinfo = this._game.sceneObjectMgr.mapInfo;
-			this._paodekuaiMapInfo = mapinfo as PaodekuaiMapInfo;
+			this._paodekuaiMapInfo = mapinfo as RpaodekuaiMapInfo;
 			if (mapinfo) {
 				this.onUpdateCardInfo();
-			} else {
-				this._paodekuaiMgr.unitOffline = this._offlineUnit;
 			}
 		}
 
 		private updateBattledInfo(): void {
-			let mapinfo = this._game.sceneObjectMgr.mapInfo as PaodekuaiMapInfo;
+			let mapinfo = this._game.sceneObjectMgr.mapInfo as RpaodekuaiMapInfo;
 			let mainUnit: Unit = this._game.sceneObjectMgr.mainUnit;
 			if (!mainUnit) return;
 			let battleInfoMgr = mapinfo.battleInfoMgr;
 			let mainIdx = mainUnit.GetIndex();
-			if (!mainIdx) return;
+			if (mainIdx == 0) return;
 			if (this._paodekuaiMgr.isReDealCard) return;
 			//好几局，用这个区分一下
 			for (let i = 0; i < battleInfoMgr.info.length; i++) {
 				let battleInfo = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoBase;
-				if (battleInfo.Type == 11) {
+				if (battleInfo.Type == 24) {
 					this._battleIndex = i;
 				}
 			}
@@ -97,6 +94,7 @@ module gamepaodekuai.story {
 						this._paodekuaiMgr.Init(this._cardsTemp, handle);
 						this._paodekuaiMgr.sort();
 						if (this._paodekuaiMgr.isReLogin) {
+							this._paodekuaiMgr.isShowCards = true;
 							this._paodekuaiMgr.refapai();
 						} else {
 							this._paodekuaiMgr.fapai();
@@ -113,7 +111,6 @@ module gamepaodekuai.story {
 			let mainUnit: Unit = this._game.sceneObjectMgr.mainUnit;
 			if (!mapinfo) return;
 			if (!mainUnit) return;
-			if (!mainUnit.GetIndex()) return;
 			let statue = mapinfo.GetMapState();
 			if (statue >= MAP_STATUS.MAP_STATE_SHUFFLE && statue <= MAP_STATUS.MAP_STATE_WAIT) {
 				this._paodekuaiMgr.isReLogin = true;
@@ -123,43 +120,10 @@ module gamepaodekuai.story {
 			}
 		}
 
-		createofflineUnit() {
-			//创建假的地图和精灵
-			let unitOffline = new UnitOffline(this._game.sceneObjectMgr);
-			if (this._game.sceneObjectMgr.mainPlayer) {
-				unitOffline.SetStr(UnitField.UNIT_STR_NAME, this._game.sceneObjectMgr.mainPlayer.playerInfo.nickname);
-				unitOffline.SetStr(UnitField.UNIT_STR_HEAD_IMG, this._game.sceneObjectMgr.mainPlayer.playerInfo.headimg);
-				unitOffline.SetDouble(UnitField.UNIT_INT_MONEY, this._game.sceneObjectMgr.mainPlayer.playerInfo.money);
-				unitOffline.SetUInt32(UnitField.UNIT_INT_QI_FU_END_TIME, this._game.sceneObjectMgr.mainPlayer.playerInfo.qifu_endtime);
-				unitOffline.SetUInt32(UnitField.UNIT_INT_QI_FU_TYPE, this._game.sceneObjectMgr.mainPlayer.playerInfo.qifu_type);
-				unitOffline.SetUInt32(UnitField.UNIT_INT_VIP_LEVEL, this._game.sceneObjectMgr.mainPlayer.playerInfo.vip_level);
-			}
-			unitOffline.SetUInt16(UnitField.UNIT_INT_UINT16, 0, 1);
-
-			this._offlineUnit = unitOffline;
-		}
-
-		enterMap() {
-			//各种判断
-			if (this.mapinfo) return false;
-			if (!this.maplv) {
-				this.maplv = this._last_maplv;
-			}
-			this._game.network.call_match_game(this._mapid, this.maplv)
-			return true;
-		}
-
-		leavelMap() {
-			//各种判断
-			this._game.network.call_leave_game();
-			return true;
-		}
-
 		clear() {
-			super.clear();
 			this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_LOAD_MAP, this, this.onIntoNewMap);
 			this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_MAPINFO_CHANGE, this, this.onMapInfoChange);
-			this._game.sceneObjectMgr.off(PaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK, this, this.updateBattledInfo);
+			this._game.sceneObjectMgr.off(RpaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK, this, this.updateBattledInfo);
 			if (this._paodekuaiMgr) {
 				this._paodekuaiMgr.clear();
 				this._paodekuaiMgr = null;

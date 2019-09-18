@@ -1,8 +1,8 @@
 /**
 * 跑得快-创建房间
 */
-module gamepaodekuai.page {
-	export class PaodekuaiCreadRoomPage extends game.gui.base.Page {
+module gamerpaodekuai.page {
+	export class RpaodekuaiCreadRoomPage extends game.gui.base.Page {
 		private _viewUI: ui.nqp.game_ui.paodekuai.FangKa_ChuangJianUI;
 		private _round_count = [5, 10, 15, 20];	// 游戏局数
 		private _pay_money = [3, 6, 9, 12];	// 不同局数的支付金额
@@ -23,9 +23,9 @@ module gamepaodekuai.page {
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
 			this._asset = [
-				PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
-				PathGameTongyong.atlas_game_ui_tongyong+ "hud.atlas",
-				PathGameTongyong.atlas_game_ui_tongyong+ "jiaru.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "jiaru.atlas",
 			];
 			this._isNeedBlack = true;
 		}
@@ -278,7 +278,7 @@ module gamepaodekuai.page {
 				TongyongPageDef.ins.alertRecharge(StringU.substitute("老板，您的金币不足开房间哦~\n补充点金币去大杀四方吧~"), () => {
 					this._game.uiRoot.general.open(DatingPageDef.PAGE_CHONGZHI);
 				}, () => {
-				}, true, TongyongPageDef.TIPS_SKIN_STR['cz']);
+				}, false, PathGameTongyong.ui_tongyong_general + "btn_cz.png");
 				return false;
 			}
 			return true;
@@ -304,10 +304,10 @@ module gamepaodekuai.page {
 					this._game.cardRoomMgr.Agrs = JSON.stringify(temp);
 					if (this._game.sceneObjectMgr.story) {
 						this._game.sceneObjectMgr.changeStory(() => {
-							this._game.sceneObjectMgr.intoStory("paodekuai", Web_operation_fields.GAME_ROOM_CONFIG_CARD_ROOM.toString(), true, this._game.cardRoomMgr);
+							this._game.sceneObjectMgr.intoStory("rpaodekuai", Web_operation_fields.GAME_ROOM_CONFIG_CARD_ROOM.toString(), true, this._game.cardRoomMgr);
 						})
 					} else {
-						this._game.sceneObjectMgr.intoStory("paodekuai", Web_operation_fields.GAME_ROOM_CONFIG_CARD_ROOM.toString(), true, this._game.cardRoomMgr);
+						this._game.sceneObjectMgr.intoStory("rpaodekuai", Web_operation_fields.GAME_ROOM_CONFIG_CARD_ROOM.toString(), true, this._game.cardRoomMgr);
 						this.close();
 					}
 					break;
@@ -341,13 +341,13 @@ module gamepaodekuai.page {
 					case Operation_Fields.OPRATE_CARDROOM_NOT_CARD_ID:
 						TongyongPageDef.ins.alertRecharge(StringU.substitute("创建房间失败,没有多余的房间可用,请确认!"), () => {
 						}, () => {
-						}, true, TongyongPageDef.TIPS_SKIN_STR['qd']);
+						}, true, PathGameTongyong.ui_tongyong_general + "btn_qd.png");
 						break;
 					case Operation_Fields.OPRATE_CARDROOM_CREATE_ROOM_NOT_MONEY:
 						TongyongPageDef.ins.alertRecharge(StringU.substitute("老板，您的金币不足哦~\n补充点金币去大杀四方吧~"), () => {
 							this._game.uiRoot.general.open(DatingPageDef.PAGE_CHONGZHI);
 						}, () => {
-						}, true, TongyongPageDef.TIPS_SKIN_STR['cz']);
+						}, false, PathGameTongyong.ui_tongyong_general + "btn_cz.png");
 						break;
 					default:
 						break;
@@ -417,7 +417,7 @@ module gamepaodekuai.page {
 		private onMapOutSuccess() {
 			TongyongPageDef.ins.alertRecharge("房间已解散!", () => {
 			}, () => {
-			}, true, TongyongPageDef.TIPS_SKIN_STR['cz']);
+			}, true, PathGameTongyong.ui_tongyong_general + "btn_cz.png");
 		}
 
 		public close(): void {

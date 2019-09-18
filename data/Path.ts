@@ -1,7 +1,7 @@
 /**
 * 路径配置
 */
-module gamepaodekuai.data {
+module gamerpaodekuai.data {
 	export class Path {
 		static readonly music_paodekuai: string = 'music/paodekuai/';
 		static readonly ui_paodekuai: string = "paodekuai_ui/game_ui/paodekuai/";
