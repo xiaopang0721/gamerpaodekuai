@@ -1,10 +1,9 @@
 //跑得快
-import PaodekuaiMgr = gamepaodekuai.manager.PaodekuaiMgr;
-import PaodekuaiStory = gamepaodekuai.story.PaodekuaiStory;
-import PaodekuaiMapInfo = gamepaodekuai.data.PaodekuaiMapInfo;
-import PaodekuaiCardRoomStory = gamepaodekuai.story.PaodekuaiCardRoomStory;
-import PaodekuaiPageDef = gamepaodekuai.page.PaodekuaiPageDef;
-import PaodekuaiData = gamepaodekuai.data.PaodekuaiData
+import RpaodekuaiMgr = gamerpaodekuai.manager.RpaodekuaiMgr;
+import RpaodekuaiMapInfo = gamerpaodekuai.data.RpaodekuaiMapInfo;
+import RpaodekuaiStory = gamerpaodekuai.story.RpaodekuaiStory;
+import RpaodekuaiPageDef = gamerpaodekuai.page.RpaodekuaiPageDef;
+import RpaodekuaiData = gamerpaodekuai.data.RpaodekuaiData
 //
-import Path_game_paodekuai = gamepaodekuai.data.Path;
-import PaodekuaiClip = gamepaodekuai.ClipUtil;
+import Path_game_rpaodekuai = gamerpaodekuai.data.Path;
+import PaodekuaiClip = gamerpaodekuai.ClipUtil;

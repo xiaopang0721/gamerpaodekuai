@@ -1,9 +1,9 @@
 /**
 * 房卡类型游戏结算页面
 */
-module gamepaodekuai.page {
-    export class PaodekuaiRoomSettlePage extends game.gui.base.Page {
-        private _viewUI: ui.game_ui.paodekuai.JieSuan_FangKaUI;
+module gamerpaodekuai.page {
+    export class RpaodekuaiRoomSettlePage extends game.gui.base.Page {
+        private _viewUI: ui.nqp.game_ui.paodekuai.JieSuan_FangKaUI;
         private _isGameEnd: boolean = false;  //是否结束
 
         constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
@@ -35,7 +35,7 @@ module gamepaodekuai.page {
         protected onBtnTweenEnd(e: LEvent, target: any) {
             switch (target) {                
 				case this._viewUI.btn_create_room:
-                    this._game.uiRoot.general.open(PaodekuaiPageDef.PAGE_PDK_CREATE_CARDROOM);
+                    this._game.uiRoot.general.open(RpaodekuaiPageDef.PAGE_PDK_CREATE_CARDROOM);
                     this.close();
 					break;
                 case this._viewUI.btn_back_hud:
@@ -92,7 +92,7 @@ module gamepaodekuai.page {
         }
     }
 
-    class ListRecordItem extends ui.game_ui.tongyong.JieSuanRender2UI {
+    class ListRecordItem extends ui.nqp.game_ui.tongyong.JieSuanRender2UI {
         private _game: Game;
         private _data: any;
         setData(game: Game, data: any) {

@@ -1,7 +1,7 @@
 /**
 * 跑得快
 */
-module gamepaodekuai.manager {
+module gamerpaodekuai.manager {
 	const enum CARD_TYPE {
 		CARDS_TYPE_WUXIAO = 0, //无效牌
 		CARDS_TYPE_DAN = 1, //单张
@@ -16,8 +16,8 @@ module gamepaodekuai.manager {
 		CARDS_TYPE_FOUR_FEIJI = 10, //四连飞机
 	}
 	const MIN_CHECKTIME: number = 1000;//最小检测时间间隔(毫秒)
-	
-	export class PaodekuaiMgr extends gamecomponent.managers.PlayingCardMgrBase<PaodekuaiData>{
+
+	export class RpaodekuaiMgr extends gamecomponent.managers.PlayingCardMgrBase<RpaodekuaiData>{
 		public isReLogin: boolean;		//是否断线重连，各种判断操作用的
 		public isShowCards: boolean = false;	//是否翻牌
 		public allCards: any = [];	//手牌
@@ -51,7 +51,7 @@ module gamepaodekuai.manager {
 
 		set unitOffline(v) {
 			this._unitOffline = v;
-			this.event(PaodekuaiMgr.MAPINFO_OFFLINE)
+			this.event(RpaodekuaiMgr.MAPINFO_OFFLINE)
 		}
 
 		get isReDealCard() {
@@ -810,17 +810,17 @@ module gamepaodekuai.manager {
 		}
 
 		//充值弹框
-		alert(str: string, ecb: Function = null, ccb: Function = null, isOnlyOK: boolean = true, okSkin?: string): void {
+		alert(str: string, ecb: Function = null, ccb: Function = null, isOnlyOK: boolean = true, okSkin?: string, titleSkin?: string, cancleSkin?: string): void {
 			if (!this._game.uiRoot.general.isOpened(TongyongPageDef.PAGE_TONGYONG_TIPS)) {
 				this._game.uiRoot.general.open(TongyongPageDef.PAGE_TONGYONG_TIPS, (tip: TongyongTipsPage) => {
 					tip.isOnlyOK = isOnlyOK;
-					tip.setInfo(str, ecb, ccb, okSkin);
+					tip.setInfo(str, ecb, ccb, okSkin, titleSkin, cancleSkin);
 				});
 			}
 		}
 
 		createObj() {
-			let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, PaodekuaiData) as PaodekuaiData;
+			let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, RpaodekuaiData) as RpaodekuaiData;
 			card.pos = new Vector2(965, 80);
 			return card;
 		}
@@ -836,7 +836,7 @@ module gamepaodekuai.manager {
 			if (idx == 0) return;
 			let count = 0;
 			for (let i = 0; i < this.allCards.length; i++) {
-				let card = this.allCards[i] as PaodekuaiData;
+				let card = this.allCards[i] as RpaodekuaiData;
 				if (card) {
 					card.myOwner(idx, idx, i);
 					card.index = i;
@@ -848,7 +848,7 @@ module gamepaodekuai.manager {
 		//对牌进行排序,大到小
 		SortCards(cards: any[]) {
 			if (!cards) return;
-			cards.sort((a: PaodekuaiData, b: PaodekuaiData) => {
+			cards.sort((a: RpaodekuaiData, b: RpaodekuaiData) => {
 				return a.Compare(b, true);
 			});
 		}
@@ -856,7 +856,7 @@ module gamepaodekuai.manager {
 		//对牌进行排序,小到大
 		SortCardsSmall(cards: any[]) {
 			if (!cards) return;
-			cards.sort((a: PaodekuaiData, b: PaodekuaiData) => {
+			cards.sort((a: RpaodekuaiData, b: RpaodekuaiData) => {
 				return b.Compare(a, true);
 			});
 		}
@@ -877,7 +877,7 @@ module gamepaodekuai.manager {
 						card.mingpai(posX, posY);
 						cardIndex++;
 						if (cardIndex == this.allCards.length)
-							this.event(PaodekuaiMgr.DEAL_CARDS);
+							this.event(RpaodekuaiMgr.DEAL_CARDS);
 					});
 					count++;
 				}
@@ -888,7 +888,7 @@ module gamepaodekuai.manager {
 		refapai() {
 			let cardsPos = this.getCardsPosTemp(this.allCards.length, true);
 			for (let i = 0; i < this.allCards.length; i++) {
-				let card = this.allCards[i] as PaodekuaiData;
+				let card = this.allCards[i] as RpaodekuaiData;
 				let posX = cardsPos[i][0];
 				let posY = cardsPos[i][1];
 				if (card) {
@@ -908,7 +908,7 @@ module gamepaodekuai.manager {
 			if (seat == mainIdx) {
 				let cardsPos = this.getCardsPosTemp(cards.length, false);
 				for (let i = 0; i < cards.length; i++) {
-					let card: PaodekuaiData;
+					let card: RpaodekuaiData;
 					for (let k = 0; k < this.allCards.length; k++) {
 						if (cards[i].GetVal() == this.allCards[k].GetVal()) {
 							card = this.allCards[k];
@@ -938,7 +938,7 @@ module gamepaodekuai.manager {
 				for (let i = 0; i < cards.length; i++) {
 					let posX = temp[posIdx - 1][0] + i * temp[posIdx - 1][2];
 					let posY = temp[posIdx - 1][1];
-					let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, PaodekuaiData) as PaodekuaiData;
+					let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, RpaodekuaiData) as RpaodekuaiData;
 					card.pos = new Vector2(posX, posY);
 					card.Init(cards[i].GetVal());
 					if (card) {
@@ -973,7 +973,7 @@ module gamepaodekuai.manager {
 			for (let i = 0; i < cards.length; i++) {
 				let posX = temp[posIdx - 1][0] + i * temp[posIdx - 1][2];
 				let posY = temp[posIdx - 1][1];
-				let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, PaodekuaiData) as PaodekuaiData;
+				let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, RpaodekuaiData) as RpaodekuaiData;
 				card.pos = new Vector2(posX, posY);
 				card.Init(cards[i]);
 				if (card) {
@@ -1055,7 +1055,7 @@ module gamepaodekuai.manager {
 		// 清理指定玩家卡牌对象
 		clearCardObject(): void {
 			this._game.sceneObjectMgr.ForEachObject((obj: any) => {
-				if (obj instanceof PaodekuaiData) {
+				if (obj instanceof RpaodekuaiData) {
 					this._game.sceneObjectMgr.clearOfflineObject(obj);
 				}
 			})

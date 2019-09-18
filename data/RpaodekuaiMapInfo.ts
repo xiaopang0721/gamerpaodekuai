@@ -1,8 +1,8 @@
 /**
 * 跑得快
 */
-module gamepaodekuai.data {
-	export class PaodekuaiMapInfo extends gamecomponent.object.MapInfoT<PaodekuaiData> {
+module gamerpaodekuai.data {
+	export class RpaodekuaiMapInfo extends gamecomponent.object.MapInfoT<RpaodekuaiData> {
 		//地图状态变更
 		static EVENT_PDK_STATUS_CHECK: string = "PaodekuaiMapInfo.EVENT_PDK_STATUS_CHECK";
 		//战斗体更新
@@ -12,7 +12,7 @@ module gamepaodekuai.data {
 		private isFirst: boolean = false;	//只是显示详情空行用的
 
 		constructor(v: SceneObjectMgr) {
-			super(v, () => { return new PaodekuaiData() });
+			super(v, () => { return new RpaodekuaiData() });
 		}
 
 		onUpdate(flags: number, mask: UpdateMask, strmask: UpdateMask): void {
@@ -20,13 +20,13 @@ module gamepaodekuai.data {
 			let isNew = flags & core.obj.OBJ_OPT_NEW;
 			if (isNew || mask.GetBit(MapField.MAP_INT_BATTLE_INDEX)) {
 				this._battleInfoMgr.OnUpdate();
-				this._sceneObjectMgr.event(PaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK);
+				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK);
 			}
 			if (isNew || mask.GetBit(MapField.MAP_INT_MAP_BYTE)) {
-				this._sceneObjectMgr.event(PaodekuaiMapInfo.EVENT_PDK_STATUS_CHECK);
+				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_STATUS_CHECK);
 			}
 			if (isNew || mask.GetBit(MapField.MAP_INT_COUNT_DOWN)) {
-				this._sceneObjectMgr.event(PaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN);
+				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN);
 			}
 		}
 

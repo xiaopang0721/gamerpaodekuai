@@ -1,17 +1,17 @@
 /**
 * 跑得快-HUD
 */
-module gamepaodekuai.page {
-	export class PaodekuaiPage extends game.gui.base.Page {
-		private _viewUI: ui.game_ui.paodekuai.PaoDeKuai_HUDUI;
+module gamerpaodekuai.page {
+	export class RpaodekuaiPage extends game.gui.base.Page {
+		private _viewUI: ui.nqp.game_ui.paodekuai.PaoDeKuai_HUDUI;
 		private _player: any;
-		private _paodekuaiMgr: PaodekuaiMgr;
+		private _paodekuaiMgr: RpaodekuaiMgr;
 		private _isRoomcardType: boolean = false;
 
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
 			this._asset = [
-				Path_game_paodekuai.atlas_game_ui + "paodekuai.atlas",
+				Path_game_rpaodekuai.atlas_game_ui + "paodekuai.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong+ "hud.atlas",
@@ -26,7 +26,7 @@ module gamepaodekuai.page {
 			this._viewUI = this.createView('game_ui.paodekuai.PaoDeKuai_HUDUI', ["game_ui.tongyong.HudUI"]);
 			this.addChild(this._viewUI);
 			this._game.playMusic(Path.music + "paodekuai/pdk_BGM.mp3");
-			this._paodekuaiMgr = new PaodekuaiMgr(this._game);
+			this._paodekuaiMgr = new RpaodekuaiMgr(this._game);
 
 			for (let index = 0; index < this._viewUI.box_right.numChildren; index++) {
 				this._viewUI.box_right._childs[index].visible = false;
@@ -45,7 +45,7 @@ module gamepaodekuai.page {
 
 			this._viewUI.box_normal.visible = !this._isRoomcardType;
 			this._viewUI.box_roomcard.visible = this._isRoomcardType;
-			(this._viewUI.view_hud as TongyongHudPage).onOpen(this._game, PaodekuaiPageDef.GAME_NAME, this._isRoomcardType);
+			(this._viewUI.view_hud as TongyongHudNqpPage).onOpen(this._game, RpaodekuaiPageDef.GAME_NAME, this._isRoomcardType);
 			if (this._isRoomcardType) {
 				for (let index = 0; index < this._viewUI.box_roomcard.numChildren; index++) {
 					this._viewUI.box_right._childs[index].visible = true;
@@ -76,10 +76,10 @@ module gamepaodekuai.page {
 			if (this.chkPlayerIsGuest()) return;
 			switch (target) {
 				case this._viewUI.img_room_create:
-					this._game.uiRoot.general.open(PaodekuaiPageDef.PAGE_PDK_CREATE_CARDROOM);
+					this._game.uiRoot.general.open(RpaodekuaiPageDef.PAGE_PDK_CREATE_CARDROOM);
 					break;
 				case this._viewUI.img_room_join:
-					this._game.uiRoot.general.open(PaodekuaiPageDef.PAGE_PDK_JOIN_CARDROOM);
+					this._game.uiRoot.general.open(RpaodekuaiPageDef.PAGE_PDK_JOIN_CARDROOM);
 					break;
 				default:
 					break;

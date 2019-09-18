@@ -1,9 +1,9 @@
 /**
 * 跑得快-创建房间
 */
-module gamepaodekuai.page {
-	export class PaodekuaiCreadRoomPage extends game.gui.base.Page {
-		private _viewUI: ui.game_ui.paodekuai.FangKa_ChuangJianUI;
+module gamerpaodekuai.page {
+	export class RpaodekuaiCreadRoomPage extends game.gui.base.Page {
+		private _viewUI: ui.nqp.game_ui.paodekuai.FangKa_ChuangJianUI;
 		private _round_count = [5, 10, 15, 20];	// 游戏局数
 		private _pay_money = [3, 6, 9, 12];	// 不同局数的支付金额
 		private _playersTemp = [3, 4];	//可选人数
@@ -23,9 +23,9 @@ module gamepaodekuai.page {
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
 			this._asset = [
-				PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
-				PathGameTongyong.atlas_game_ui_tongyong+ "hud.atlas",
-				PathGameTongyong.atlas_game_ui_tongyong+ "jiaru.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "jiaru.atlas",
 			];
 			this._isNeedBlack = true;
 		}

@@ -1,8 +1,8 @@
 /**
 * 跑得快 
 */
-module gamepaodekuai.data {
-	export class PaodekuaiData extends gamecomponent.object.PlayingPuKeCard {
+module gamerpaodekuai.data {
+	export class RpaodekuaiData extends gamecomponent.object.PlayingPuKeCard {
 		private _cardsPosTemp = [247, 625, 45];	//自己手牌第一张牌的位置
 		private _mainPlayerIndex: number;
 		public _ownerIdx: number;		//牌的归属座位

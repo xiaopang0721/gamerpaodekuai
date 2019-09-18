@@ -1,7 +1,7 @@
 /**
 * 跑得快-规则
 */
-module gamepaodekuai.page {
+module gamerpaodekuai.page {
 	const enum TYPE_INDEX {
 		TYPE_JIANJIE = 0,
 		TYPE_TYPE = 1,
@@ -10,15 +10,15 @@ module gamepaodekuai.page {
 		TYPE_JIESUAN = 4,
 	}
 
-	export class PaodekuaiRulePage extends game.gui.base.Page {
-		private _viewUI: ui.game_ui.paodekuai.PaoDeKuai_GuiZeUI;
+	export class RpaodekuaiRulePage extends game.gui.base.Page {
+		private _viewUI: ui.nqp.game_ui.paodekuai.PaoDeKuai_GuiZeUI;
 
 		constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
 			super(v, onOpenFunc, onCloseFunc);
 			this._isNeedBlack = true;
 			this._isClickBlack = true;
 			this._asset = [
-				Path_game_paodekuai.atlas_game_ui + "paodekuai.atlas",
+				Path_game_rpaodekuai.atlas_game_ui + "paodekuai.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
 			];
 		}
