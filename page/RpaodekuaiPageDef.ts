@@ -8,7 +8,6 @@ module gamerpaodekuai.page {
 		static PAGE_PDK: string = "1";			//HUD界面
 		static PAGE_PDK_MAP: string = "2";		//地图界面
 		static PAGE_PDK_RULE: string = "101";		//规则界面
-		static PAGE_PDK_CREATE_CARDROOM: string = "8";	// 创建房间
 		static PAGE_PDK_CARDROOM_SETTLE: string = "10";	// 房卡结算页
 		static PAGE_PDK_JOIN_CARDROOM: string = "100";		// 加入房间
 		static myinit(str: string) {
@@ -17,8 +16,6 @@ module gamerpaodekuai.page {
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK] = RpaodekuaiPage;
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_MAP] = RpaodekuaiMapPage;
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_RULE] = RpaodekuaiRulePage;
-			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_CREATE_CARDROOM] = RpaodekuaiCreadRoomPage;
-			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_JOIN_CARDROOM] = RpaodekuaiJoinRoomPage;
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_CARDROOM_SETTLE] = RpaodekuaiRoomSettlePage;
 
 

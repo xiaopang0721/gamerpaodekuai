@@ -129,8 +129,10 @@ module gamerpaodekuai.page {
             this._viewUI.btn_tishi.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_tuoguan.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             this._viewUI.btn_qifu.on(LEvent.CLICK, this, this.onBtnClickWithTween);
+            this._game.qifuMgr.on(QiFuMgr.QIFU_FLY, this, this.qifuFly);
 
             this.setCardRoomBtnEvent(true);
+            
         }
 
         //打开时要处理的东西
@@ -261,7 +263,7 @@ module gamerpaodekuai.page {
                     this._game.network.call_pdk_trusteeship();
                     break;
                 case this._viewUI.btn_qifu://祈福
-                    this._game.uiRoot.general.open(TongyongPageDef.PAGE_TONGYONG_QIFU);
+                    this._game.uiRoot.general.open(DatingPageDef.PAGE_QIFU);
                     break;
                 default:
                     break;
@@ -1519,22 +1521,18 @@ module gamerpaodekuai.page {
 
         private _nameStrInfo: string[] = ["xs", "px", "gsy", "gg", "cs", "tdg"];
         private _qifuTypeImgUrl: string;
+        private qifuFly(dataSource: any): void {
+            if (!dataSource) return;
+            let dataInfo = dataSource;
+            this._game.qifuMgr.showFlayAni(this._viewUI.view_player0.img_head, this._viewUI, dataSource, (dataInfo) => {
+                //相对应的玩家精灵做出反应
+                this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_qifu + "f_{0}2.png", this._nameStrInfo[dataInfo.qf_id - 1]);
+                this.onUpdateUnit(dataInfo.qifu_index);
+            });
+        }
+
         protected onOptHandler(optcode: number, msg: any) {
-            if (msg.type == Operation_Fields.OPRATE_GAME) {
-                switch (msg.reason) {
-                    case Operation_Fields.OPRATE_GAME_QIFU_SUCCESS_RESULT:
-                        let dataInfo = JSON.parse(msg.data);
-                        //打开祈福动画界面
-                        this._game.uiRoot.general.open(TongyongPageDef.PAGE_TONGYONG_QIFU_ANI, (page) => {
-                            page.dataSource = StringU.substitute(PathGameTongyong.ui_tongyong_qifu + "f_{0}1.png", this._nameStrInfo[dataInfo.qf_id - 1]);
-                        });
-                        //相对应的玩家精灵做出反应
-                        this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_qifu + "f_{0}2.png", this._nameStrInfo[dataInfo.qf_id - 1]);
-                        this.onUpdateUnit(dataInfo.qifu_index);
-                        break;
-                }
-            }
-            else if (msg.type == Operation_Fields.OPRATE_TELEPORT) {
+            if (msg.type == Operation_Fields.OPRATE_TELEPORT) {
                 switch (msg.reason) {
                     case Operation_Fields.OPRATE_TELEPORT_MAP_CREATE_ROOM_SUCCESS://在地图中重新创建房间成功
                         this.resetData();
@@ -1676,6 +1674,7 @@ module gamerpaodekuai.page {
                 this._viewUI.view_xipai.ani_xipai.off(LEvent.COMPLETE, this, this.onWashCardOver);
                 this._game.network.removeHanlder(Protocols.SMSG_OPERATION_FAILED, this, this.onOptHandler);
                 this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_OPRATE_SUCESS, this, this.onSucessHandler);
+                this._game.qifuMgr.off(QiFuMgr.QIFU_FLY, this, this.qifuFly);
 
                 Laya.timer.clearAll(this);
                 Laya.Tween.clearAll(this);

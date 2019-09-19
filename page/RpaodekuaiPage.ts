@@ -53,7 +53,7 @@ module gamerpaodekuai.page {
 			if (!this._player) return;
 			switch (target) {
 				case this._viewUI.img_room_create:
-					this._game.uiRoot.general.open(RpaodekuaiPageDef.PAGE_PDK_CREATE_CARDROOM);
+					this._game.uiRoot.general.open(DatingPageDef.PAGE_PDK_CREATE_CARDROOM);
 					break;
 				case this._viewUI.img_room_join:
 					this._game.uiRoot.general.open(RpaodekuaiPageDef.PAGE_PDK_JOIN_CARDROOM);
