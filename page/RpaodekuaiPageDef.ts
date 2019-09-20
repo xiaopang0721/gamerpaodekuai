@@ -9,7 +9,6 @@ module gamerpaodekuai.page {
 		static PAGE_PDK_MAP: string = "2";		//地图界面
 		static PAGE_PDK_RULE: string = "101";		//规则界面
 		static PAGE_PDK_CARDROOM_SETTLE: string = "10";	// 房卡结算页
-		static PAGE_PDK_JOIN_CARDROOM: string = "100";		// 加入房间
 		static myinit(str: string) {
 			super.myinit(str);
 			PaodekuaiClip.init();
