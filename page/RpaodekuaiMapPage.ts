@@ -133,7 +133,7 @@ module gamerpaodekuai.page {
             this._game.qifuMgr.on(QiFuMgr.QIFU_FLY, this, this.qifuFly);
 
             this.setCardRoomBtnEvent(true);
-            
+
         }
 
         //打开时要处理的东西
@@ -339,7 +339,6 @@ module gamerpaodekuai.page {
                 if (unit) {
                     let name = getMainPlayerName(unit.GetName());
                     this._viewUI["view_player" + index].txt_name.text = name;
-                    this._viewUI["view_player" + index].img_head.skin = PathGameTongyong.ui_tongyong_touxiang + "head_" + unit.GetHeadImg() + ".png";
                     let money = EnumToString.getPointBackNum(unit.GetMoney(), 2);
                     this._viewUI["view_player" + index].txt_money.text = money;
                     //托管状态
@@ -382,6 +381,7 @@ module gamerpaodekuai.page {
                         }
                     } else {
                         this._viewUI["view_player" + index].img_qifu.visible = false;
+                        this._viewUI["view_player" + index].img_head.skin = PathGameTongyong.ui_tongyong_touxiang + "head_" + unit.GetHeadImg() + ".png";
                     }
                 }
             }
