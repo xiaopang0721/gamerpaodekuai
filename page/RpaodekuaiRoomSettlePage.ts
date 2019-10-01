@@ -38,9 +38,6 @@ module gamerpaodekuai.page {
                     this._game.uiRoot.general.open(DatingPageDef.PAGE_PDK_CREATE_CARDROOM);
                     this.close();
 					break;
-                case this._viewUI.btn_back_hud:
-                    this._game.sceneObjectMgr.leaveStory(true);
-					break;
                 default:
                     break;
             }
@@ -50,13 +47,10 @@ module gamerpaodekuai.page {
         private setGameEndBtnState(isEventOn) {
             this._viewUI.lab_xinxi.visible = !this._isGameEnd;
             this._viewUI.btn_create_room.visible = this._isGameEnd;
-            this._viewUI.btn_back_hud.visible = this._isGameEnd;
             if (isEventOn) {
                 this._viewUI.btn_create_room.on(LEvent.CLICK, this, this.onBtnClickWithTween);
-			    this._viewUI.btn_back_hud.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             } else {
                 this._viewUI.btn_create_room.off(LEvent.CLICK, this, this.onBtnClickWithTween);
-			    this._viewUI.btn_back_hud.off(LEvent.CLICK, this, this.onBtnClickWithTween);
             }
         }
 
