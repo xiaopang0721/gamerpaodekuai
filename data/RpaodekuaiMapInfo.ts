@@ -9,6 +9,8 @@ module gamerpaodekuai.data {
 		static EVENT_PDK_BATTLE_CHECK: string = "PaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK";
 		//倒计时时间戳更新
 		static EVENT_PDK_COUNT_DOWN: string = "PaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN";
+		//投票时间戳更新
+		static EVENT_PDK_TOUPIAO_TIME: string = "PaodekuaiMapInfo.EVENT_PDKTOUPIAO_TIME";
 		private isFirst: boolean = false;	//只是显示详情空行用的
 
 		constructor(v: SceneObjectMgr) {
@@ -27,6 +29,9 @@ module gamerpaodekuai.data {
 			}
 			if (isNew || mask.GetBit(MapField.MAP_INT_COUNT_DOWN)) {
 				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN);
+			}
+			if (isNew || mask.GetBit(MapField.MAP_INT_TOU_PIAO_TIME)) {
+				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_TOUPIAO_TIME);
 			}
 		}
 

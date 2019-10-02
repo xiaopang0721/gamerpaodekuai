@@ -2,7 +2,7 @@
 * 跑得快
 */
 module gamerpaodekuai.manager {
-	const enum CARD_TYPE {
+	export const enum CARD_TYPE {
 		CARDS_TYPE_WUXIAO = 0, //无效牌
 		CARDS_TYPE_DAN = 1, //单张
 		CARDS_TYPE_DUI = 2, //对子
@@ -36,7 +36,7 @@ module gamerpaodekuai.manager {
 		private _cardsTemp: any = [[], [], [], []];	//玩家出牌数据
 		private _isReDealCard: boolean = false;
 		private _totalUnitCount: number = 3;	// 玩家数量
-		private _centerPosTemp = [640, 410, 36];	//主玩家出牌中间那张牌的位置
+		private _centerPosTemp = [640, 450, 36];	//主玩家出牌中间那张牌的位置
 		private _centerPlayPosTemp = [670, 625, 50];	//主玩家手牌中间那张牌的位置
 		private _playCardsPos1 = [[1040, 270, -22], [700, 110, 22], [240, 270, 22]];	//其他人出牌第一张位置,4人场
 		private _playCardsPos2 = [[1040, 270, -22], [240, 270, 22]];	//其他人出牌第一张位置,3人场

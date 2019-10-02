@@ -52,7 +52,6 @@ module gamerpaodekuai.story {
 
 		private onIntoNewMap(info?: MapAssetInfo): void {
 			if (!info) return;
-
 			this.onMapInfoChange();
 			this._game.uiRoot.closeAll();
 			this._game.uiRoot.HUD.open(RpaodekuaiPageDef.PAGE_PDK_MAP);
