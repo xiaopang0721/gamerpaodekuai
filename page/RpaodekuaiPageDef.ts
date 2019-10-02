@@ -126,6 +126,7 @@ module gamerpaodekuai.page {
 					Path_game_rpaodekuai.music_paodekuai + "nv_woqiang.mp3",
 				])
 			}
+			this["__roomcard"] = Web_operation_fields.GAME_ROOM_CONFIG_CARD_ROOM;
 		}
 	}
 }
