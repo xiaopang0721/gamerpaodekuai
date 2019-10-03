@@ -446,7 +446,6 @@ module gamerpaodekuai.page {
                             this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg1.png";
                             this._viewUI.box_tg.visible = true;
                             this._viewUI.btn_qxtg.visible = true;
-                            this._viewUI.tg_info.visible = true;
                             // this._paodekuaiMgr.setTG(true);
                         }
                     } else if (unit.GetIdentity() == 0) {
@@ -455,7 +454,6 @@ module gamerpaodekuai.page {
                             this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg0.png";
                             this._viewUI.box_tg.visible = false;
                             this._viewUI.btn_qxtg.visible = false;
-                            this._viewUI.tg_info.visible = false;
                             // this._paodekuaiMgr.setTG(false);
                         }
                     }
@@ -928,7 +926,7 @@ module gamerpaodekuai.page {
             for (let i = 0; i < 4; i++) {
                 this._viewUI["img_first" + i].visible = false;
             }
-            Laya.Tween.to(this._viewUI.view_xs, { top: this._xsPos[qiang_pos][0], centerX: this._xsPos[qiang_pos][1], scaleX: 0, scaleY: 0 }, 2000, null,
+            Laya.Tween.to(this._viewUI.view_xs, { top: this._xsPos[qiang_pos][0], centerX: this._xsPos[qiang_pos][1], scaleX: 0, scaleY: 0 }, 1000, null,
                 Handler.create(this, () => {
                     this._viewUI["img_first" + qiang_pos].visible = true;
                     this._viewUI["img_first" + qiang_pos].ani1.play(0, false);
@@ -1167,7 +1165,7 @@ module gamerpaodekuai.page {
                                 //底住加倍
                                 this._viewUI.text_qz_jb.alpha = 1;
                                 this._viewUI.text_qz_jb.visible = true;
-                                Laya.Tween.to(this._viewUI.text_qz_jb, { aplah: 0 }, 2000, null);
+                                Laya.Tween.to(this._viewUI.text_qz_jb, { alpha: 0 }, 2000, null);
                             }
                             this._viewUI.text_qz_info.visible = true;
                             if (idx == mainIdx) {
