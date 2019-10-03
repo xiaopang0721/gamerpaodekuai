@@ -38,8 +38,8 @@ module gamerpaodekuai.manager {
 		private _totalUnitCount: number = 3;	// 玩家数量
 		private _centerPosTemp = [640, 450, 36];	//主玩家出牌中间那张牌的位置
 		private _centerPlayPosTemp = [670, 625, 50];	//主玩家手牌中间那张牌的位置
-		private _playCardsPos1 = [[1040, 270, -22], [700, 110, 22], [240, 270, 22]];	//其他人出牌第一张位置,4人场
-		private _playCardsPos2 = [[1040, 270, -22], [240, 270, 22]];	//其他人出牌第一张位置,3人场
+		private _playCardsPos1 = [[1040, 360, -22], [700, 170, 22], [240, 360, 22]];	//其他人出牌第一张位置,4人场
+		private _playCardsPos2 = [[1040, 360, -22], [240, 360, 22]];	//其他人出牌第一张位置,3人场
 
 		constructor(game: Game) {
 			super(game);
@@ -821,7 +821,7 @@ module gamerpaodekuai.manager {
 
 		createObj() {
 			let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, RpaodekuaiData) as RpaodekuaiData;
-			card.pos = new Vector2(965, 80);
+			card.pos = new Vector2(864, 268);
 			return card;
 		}
 
@@ -851,6 +851,16 @@ module gamerpaodekuai.manager {
 			cards.sort((a: RpaodekuaiData, b: RpaodekuaiData) => {
 				return a.Compare(b, true);
 			});
+		}
+
+		//托管状态设置牌是否可以点击
+		setTG(isTG: boolean) {
+			for (let i = 0; i < this.allCards.length; i++) {
+				let card = this.allCards[i] as RpaodekuaiData;
+				if (card) {
+					card.toggle = !isTG;
+				}
+			}
 		}
 
 		//对牌进行排序,小到大
