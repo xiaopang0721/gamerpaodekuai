@@ -203,9 +203,13 @@ module gamerpaodekuai.page {
             this._viewUI.view_hts.centerX = 0;
             this._viewUI.view_hts.scale(1, 1);
             this._viewUI.view_hts.rotation = 0;
-            this._viewUI.box_tg.visible = true;
-            this._isCurQiangGuan = false;
+            this._viewUI.box_tg.visible = false;
+            this._viewUI.btn_qxtg.visible = false;
             this._viewUI.tg_info.visible = false;
+            this._isCurQiangGuan = false;
+            this._viewUI.text_qz_info.visible = false;
+            this._viewUI.text_qz_jb.visible = false;
+            this._viewUI.text_qz_jb.alpha = 1;
             for (let i = 1; i < 4; i++) {
                 this._viewUI["img_finish" + i].visible = false;
             }
@@ -441,14 +445,18 @@ module gamerpaodekuai.page {
                         if (posIdx == idx) {
                             this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg1.png";
                             this._viewUI.box_tg.visible = true;
-                            this._paodekuaiMgr.setTG(true);
+                            this._viewUI.btn_qxtg.visible = true;
+                            this._viewUI.tg_info.visible = true;
+                            // this._paodekuaiMgr.setTG(true);
                         }
                     } else if (unit.GetIdentity() == 0) {
                         this._viewUI["view_player" + index].img_tuoguan.visible = false;
                         if (posIdx == idx) {
                             this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg0.png";
                             this._viewUI.box_tg.visible = false;
-                            this._paodekuaiMgr.setTG(false);
+                            this._viewUI.btn_qxtg.visible = false;
+                            this._viewUI.tg_info.visible = false;
+                            // this._paodekuaiMgr.setTG(false);
                         }
                     }
                     //头像框
@@ -922,7 +930,6 @@ module gamerpaodekuai.page {
             }
             Laya.Tween.to(this._viewUI.view_xs, { top: this._xsPos[qiang_pos][0], centerX: this._xsPos[qiang_pos][1], scaleX: 0, scaleY: 0 }, 2000, null,
                 Handler.create(this, () => {
-                    console.log("==================", qiang_pos);
                     this._viewUI["img_first" + qiang_pos].visible = true;
                     this._viewUI["img_first" + qiang_pos].ani1.play(0, false);
                     this._viewUI.view_xs.visible = false;
@@ -959,7 +966,7 @@ module gamerpaodekuai.page {
             if (mainIdx == 0) return;
             for (let i = 0; i < battleInfoMgr.info.length; i++) {
                 let battleInfo = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoBase;
-                let posIdx = (battleInfo.SeatIndex - mainIdx + this._unitCounts) % this._unitCounts;
+                let posIdx = (battleInfo.SeatIndex - mainIdx + this._unitCounts) % this._unitCounts;//客户端座位
                 switch (battleInfo.Type) {
                     case 3: {   //出牌
                         if (this._battleIndex < i) {
@@ -1126,7 +1133,6 @@ module gamerpaodekuai.page {
                                 this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
                                 this._viewUI.view_hts.visible = true;
                                 this._viewUI.view_hts.ani1.play(0, false);
-                                console.log("-----------------------", typeFirst);
                                 this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx])
                             }
                         }
@@ -1137,33 +1143,43 @@ module gamerpaodekuai.page {
                             this._battleIndex = i;
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoStart;
                             let idx = info.SeatIndex;
-                            if (info.BetVal == 1) {  //BetVal 是服务端的opt_type是抢关操作类型
+                            let isQiang: boolean = info.BetVal == 1;
+                            if (isQiang) {  //BetVal 是服务端的opt_type是抢关操作类型
                                 //有值，为抢关开始
                                 this._isCurQiangGuan = true;
-                                for (let k = 0; k < this._unitCounts; k++) {
-                                    if (posIdx == k) {
-                                        this._viewUI["img_first" + k].visible = true;
-                                    } else {
-                                        this._viewUI["img_first" + k].visible = false;
-                                    }
-                                }
+                                // for (let k = 0; k < this._unitCounts; k++) {
+                                //     if (posIdx == k) {
+                                //         this._viewUI["img_first" + k].visible = true;
+                                //     } else {
+                                //         this._viewUI["img_first" + k].visible = false;
+                                //     }
+                                // }
                                 this._qiangCount = this._qiangCount + 1;
                                 let per = this._qiangCount * 2 + 1;
                                 this._viewUI.lab_per.text = per.toString();
                             }
                             this._viewUI["img_tishi" + posIdx].visible = true;
-                            this._viewUI["img_tishi" + posIdx].img_info.skin = Path_game_rpaodekuai.ui_paodekuai + (info.BetVal == 1 ? "qipai/tu_qg.png" : "qipai/tu_bq1.png");
+                            this._viewUI["img_tishi" + posIdx].img_info.skin = Path_game_rpaodekuai.ui_paodekuai + (isQiang ? "qipai/tu_qg.png" : "qipai/tu_bq1.png");
                             this._viewUI["img_tishi" + posIdx].ani1.play(0, false);
                             this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
+
+                            if (isQiang) {
+                                //底住加倍
+                                this._viewUI.text_qz_jb.alpha = 1;
+                                this._viewUI.text_qz_jb.visible = true;
+                                Laya.Tween.to(this._viewUI.text_qz_jb, { aplah: 0 }, 2000, null);
+                            }
+                            this._viewUI.text_qz_info.visible = true;
                             if (idx == mainIdx) {
                                 this._viewUI.box_qiang.visible = false;
+                                this._viewUI.text_qz_info.visible = false;
                             }
                             if (!this._paodekuaiMgr.isReLogin) {
                                 let unit = this._game.sceneObjectMgr.getUnitByIdx(idx);
                                 if (unit) {
                                     let headNum = parseInt(unit.GetHeadImg());
                                     let sexType = headNum > 10 ? "nv" : "nan";
-                                    let musicType = info.BetVal == 1 ? "_woqiang" : "_buqiang";
+                                    let musicType = isQiang ? "_woqiang" : "_buqiang";
                                     let str: string;
                                     str = Path_game_rpaodekuai.music_paodekuai + sexType + musicType + ".mp3";
                                     this._game.playSound(str, false);
@@ -1177,13 +1193,13 @@ module gamerpaodekuai.page {
                             this._battleIndex = i;
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoQiangGuanEnd;
                             let idx = info.SeatIndex;
-                            let qiang_pos = info.qiang_pos - 1
-                            this._curQGIndex = qiang_pos - 1;  //记录下当前抢关的人
+                            this._viewUI.text_qz_info.visible = false;
+                            let qiang_pos = info.qiang_pos;
+                            this._curQGIndex = (qiang_pos - mainIdx + this._unitCounts) % this._unitCounts;//客户端座位
                             //抢关成功特效
-                            console.log("------------------", qiang_pos);
                             this._viewUI.view_xs.visible = true;
                             this._viewUI.view_xs.ani1.play(0, false);
-                            this._viewUI.view_xs.ani1.on(LEvent.COMPLETE, this, this.xsViewAniComplete, [qiang_pos]);
+                            this._viewUI.view_xs.ani1.on(LEvent.COMPLETE, this, this.xsViewAniComplete, [this._curQGIndex]);
                         }
                     }
                     case 33: {   //报单
