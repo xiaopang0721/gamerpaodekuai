@@ -208,8 +208,7 @@ module gamerpaodekuai.page {
             this._viewUI.tg_info.visible = false;
             this._isCurQiangGuan = false;
             this._viewUI.text_qz_info.visible = false;
-            this._viewUI.text_qz_jb.visible = false;
-            this._viewUI.text_qz_jb.alpha = 1;
+            this._viewUI.view_dzjb.visible = false;
             for (let i = 1; i < 4; i++) {
                 this._viewUI["img_finish" + i].visible = false;
             }
@@ -1145,13 +1144,6 @@ module gamerpaodekuai.page {
                             if (isQiang) {  //BetVal 是服务端的opt_type是抢关操作类型
                                 //有值，为抢关开始
                                 this._isCurQiangGuan = true;
-                                // for (let k = 0; k < this._unitCounts; k++) {
-                                //     if (posIdx == k) {
-                                //         this._viewUI["img_first" + k].visible = true;
-                                //     } else {
-                                //         this._viewUI["img_first" + k].visible = false;
-                                //     }
-                                // }
                                 this._qiangCount = this._qiangCount + 1;
                                 let per = this._qiangCount * 2 + 1;
                                 this._viewUI.lab_per.text = per.toString();
@@ -1163,9 +1155,8 @@ module gamerpaodekuai.page {
 
                             if (isQiang) {
                                 //底住加倍
-                                this._viewUI.text_qz_jb.alpha = 1;
-                                this._viewUI.text_qz_jb.visible = true;
-                                Laya.Tween.to(this._viewUI.text_qz_jb, { alpha: 0 }, 2000, null);
+                                this._viewUI.view_dzjb.ani1.play(0, false);
+                                this._viewUI.view_dzjb.ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI.view_dzjb, () => { }]);
                             }
                             this._viewUI.text_qz_info.visible = true;
                             if (idx == mainIdx) {
@@ -1717,7 +1708,7 @@ module gamerpaodekuai.page {
                             this._qgView.ani1.play(1, false);
                         } else {
                             this._viewUI.box_view.addChild(this._qgView);
-                            this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView]);
+                            this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView, this.playWinEffect]);
                             this._qgView.ani1.play(1, false);
                         }
                     }
@@ -1735,10 +1726,12 @@ module gamerpaodekuai.page {
                         this._qgsbView.ani1.play(1, false);
                     } else {
                         this._viewUI.box_view.addChild(this._qgsbView);
-                        this._qgsbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgsbView]);
+                        this._qgsbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgsbView, this.playWinEffect]);
                         this._qgsbView.ani1.play(1, false);
                     }
                 }
+            } else {
+                this.playWinEffect();
             }
         }
 
@@ -1779,11 +1772,11 @@ module gamerpaodekuai.page {
 
         //胜利之后的动画
         private playWinEffect(): void {
-            this._viewUI.view_win.visible = true;
-            this._viewUI.view_win.ani1.play(0, false);
+            if (this._moneyChange > 0) {
+                this._viewUI.view_win.visible = true;
+                this._viewUI.view_win.ani1.play(0, false);
+            }
         }
-
-        //先手特效运动变化
 
 
         //金币变化 飘字clip
