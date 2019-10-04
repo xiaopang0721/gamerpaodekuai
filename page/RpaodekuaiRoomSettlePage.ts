@@ -11,7 +11,7 @@ module gamerpaodekuai.page {
             this._isNeedBlack = true;
             this._isClickBlack = false;
             this._asset = [
-                PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
             ];
         }
 
@@ -24,20 +24,23 @@ module gamerpaodekuai.page {
         // 页面打开时执行函数
         protected onOpen(): void {
             super.onOpen();
-            this._viewUI.list_settle.itemRender = this.createChildren("game_ui.tongyong.JieSuanRender2UI",ListRecordItem);
+            this._viewUI.list_settle.itemRender = this.createChildren("game_ui.tongyong.JieSuanRender2UI", ListRecordItem);
             this._viewUI.list_settle.renderHandler = new Handler(this, this.renderHandler);
             this._viewUI.list_settle.dataSource = this.dataSource[2];
-            this._isGameEnd = (Number(this.dataSource[0])) == Number(this.dataSource[1]);
+            this._isGameEnd = this.dataSource[3] >= MAP_STATUS.MAP_STATE_END;
             this.setGameEndBtnState(this._isGameEnd);
         }
 
         //按钮点击
         protected onBtnTweenEnd(e: LEvent, target: any) {
-            switch (target) {                
-				case this._viewUI.btn_create_room:
+            switch (target) {
+                case this._viewUI.btn_create_room:
                     this._game.uiRoot.general.open(DatingPageDef.PAGE_PDK_CREATE_CARDROOM);
                     this.close();
-					break;
+                    break;
+                case this._viewUI.btn_close:
+                    this._game.sceneObjectMgr.leaveStory(true);
+                    break
                 default:
                     break;
             }
@@ -45,12 +48,17 @@ module gamerpaodekuai.page {
 
         // 设置最后结束时的按纽状态
         private setGameEndBtnState(isEventOn) {
-            this._viewUI.lab_xinxi.visible = !this._isGameEnd;
-            this._viewUI.btn_create_room.visible = this._isGameEnd;
+            this._viewUI.box_jx_info.visible = !this._isGameEnd;
+            this._viewUI.btn_create_room.visible = this._viewUI.box_js_info.visible = this._isGameEnd;
+            let str = StringU.substitute("本轮游戏已满{0}局...", HtmlFormat.addHtmlColor(this.dataSource[0], TeaStyle.COLOR_YELLOW));
+            TextFieldU.setHtmlText(this._viewUI.lb_js, str);
+            this._viewUI.btn_close.visible = this._isGameEnd;
             if (isEventOn) {
                 this._viewUI.btn_create_room.on(LEvent.CLICK, this, this.onBtnClickWithTween);
+                this._viewUI.btn_close.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             } else {
                 this._viewUI.btn_create_room.off(LEvent.CLICK, this, this.onBtnClickWithTween);
+                this._viewUI.btn_close.off(LEvent.CLICK, this, this.onBtnClickWithTween);
             }
         }
 
@@ -68,15 +76,16 @@ module gamerpaodekuai.page {
         //倒计时
         private _endTime = this._game.sync.serverTimeBys + 5;
         deltaUpdate(): void {
-            let curTime = this._game.sync.serverTimeBys;
-            let time = Math.floor(this._endTime - curTime) + 1;
-            if (time > 0) {                
-                let str = time + "S后开始第" + (this.dataSource[0] + 1) + "局，本轮共" + this.dataSource[1] + "局";
-                this._viewUI.lab_xinxi.text = str;
-            } else {
-                // 最后一局不自动关闭
-                if (!this._isGameEnd) 
+            if (!this._isGameEnd) {
+                let curTime = this._game.sync.serverTimeBys;
+                let time = Math.floor(this._endTime - curTime) + 1;
+                if (time > 0) {
+                    let str = StringU.substitute("{0}后开始{1}{2}局...", HtmlFormat.addHtmlColor(time + "s", TeaStyle.COLOR_YELLOW), HtmlFormat.addHtmlColor(this.dataSource[0] + "/", TeaStyle.COLOR_YELLOW), HtmlFormat.addHtmlColor(this.dataSource[1], TeaStyle.COLOR_YELLOW));
+                    TextFieldU.setHtmlText(this._viewUI.lab_xinxi, str);
+                } else {
+                    // 最后一局不自动关闭
                     this.close();
+                }
             }
         }
 
@@ -93,15 +102,49 @@ module gamerpaodekuai.page {
             this._game = game;
             this._data = data;
             this.img_banker.visible = false;
-            this.img_bg.visible = this._data.isMain;
             this.lab_name.text = this._data.name;
             this.lab_chip.text = this._data.multiple;
             this.lab_multiple.text = this._data.cardCount;
+            this.img_tp.visible = false;
+            this.img_qgsb.visible = false;
+            this.lab_double.visible = false;
+            this.img_qg.visible = false;
+            if (this._data.isCurQiangGuan) {
+                //抢关了
+                if (this._data.qgResult == 1) {
+                    //抢关成功
+                    if (this._data.isQG) {
+                        //是否是抢关的人
+                    } else {
+                        this.img_qg.visible = true;
+                        this.lab_double.visible = true;
+                    }
+                } else {
+                    //抢关失败
+                    if (this._data.isQG) {
+                        this.img_tp.visible = true;
+                        this.img_qgsb.visible = true;
+                    }
+                }
+            } else {
+                //没有抢关
+                if (this._data.cardCount == this._data.maxCount) {
+                    //没出过牌
+                    this.img_qg.visible = true;
+                    this.lab_double.visible = true;
+                }
+            }
+            //炸弹
+            this.img_bomb.visible = false;
+            if (this._data.bombNum > 0) {
+                this.img_bomb.visible = true;
+                this.lab_bomb.text = this._data.bombNum;
+            }
             this.lab_point.text = this._data.point ? this._data.point : "0";
             this.lbl_totalpoint.text = String(this._data.totalPoint);
-            this.lab_name.color = this._data.isMain ? "#cc90ff" : "#ffffff";
-            this.lab_point.color = parseFloat(this._data.point) >= 0 ? "#069e00" : "#ff0000";
-            this.lbl_totalpoint.color = parseFloat(this._data.totalPoint) >= 0 ? "#069e00" : "#ff0000";
+            this.lab_name.color = this.lab_chip.color = this.lab_multiple.color = this._data.isMain ? "#ffc32c" : TeaStyle.COLOR_WHITE;
+            this.lab_point.color = parseFloat(this._data.point) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
+            this.lbl_totalpoint.color = parseFloat(this._data.totalPoint) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
         }
 
         destroy() {

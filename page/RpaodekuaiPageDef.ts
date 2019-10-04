@@ -5,14 +5,12 @@ module gamerpaodekuai.page {
 	export class RpaodekuaiPageDef extends game.gui.page.PageDef {
 		static GAME_NAME: string;
 		//界面
-		static PAGE_PDK: string = "1";			//HUD界面
 		static PAGE_PDK_MAP: string = "2";		//地图界面
 		static PAGE_PDK_RULE: string = "101";		//规则界面
 		static PAGE_PDK_CARDROOM_SETTLE: string = "10";	// 房卡结算页
 		static myinit(str: string) {
 			super.myinit(str);
 			PaodekuaiClip.init();
-			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK] = RpaodekuaiPage;
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_MAP] = RpaodekuaiMapPage;
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_RULE] = RpaodekuaiRulePage;
 			PageDef._pageClassMap[RpaodekuaiPageDef.PAGE_PDK_CARDROOM_SETTLE] = RpaodekuaiRoomSettlePage;
