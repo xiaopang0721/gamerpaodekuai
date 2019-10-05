@@ -1575,7 +1575,12 @@ module gamerpaodekuai.page {
 
         //轮到自己时，按钮状态
         private CheckBtnStatus(mainIdx): void {
-            if (this._playCardsConfig.player == mainIdx || this._playCardsConfig.card_type == 0) {  //有发牌权
+            //默认UI位置
+            this._viewUI.btn_tishi.centerX = 0;
+            this._viewUI.img_tishi.centerX = -1;
+            this._viewUI.btn_pass.centerX = -187;
+            this._viewUI.img_pass.centerX = -187;
+            if (this._playCardsConfig.player == mainIdx || this._playCardsConfig.card_type == 0) {  //有发牌权或者一开始就是你先出牌
                 this._viewUI.img_pass.visible = true;
                 this._viewUI.btn_pass.mouseEnabled = false;
                 this._viewUI.img_tishi.visible = false;
@@ -1597,22 +1602,18 @@ module gamerpaodekuai.page {
                     this._viewUI.btn_chupai.mouseEnabled = true;
                     this._viewUI.img_chupai.visible = false;
                 }
+                if (this._guanShang == 1) {
+                    this._viewUI.btn_pass.visible = false;
+                    this._viewUI.img_pass.visible = false;
+                    this._viewUI.btn_tishi.centerX = this._viewUI.btn_pass.centerX;
+                    this._viewUI.img_tishi.centerX = this._viewUI.img_pass.centerX;
+                }
             } else {
                 //手里的牌
                 let cards = this._paodekuaiMgr.promptBtn(this._paodekuaiMgr.allCards, this._playCardsConfig.card_type, this._playCardsConfig.card_len, this._playCardsConfig.max_val, false);
-                let result = cards.length > 0 ? true : false;
+                let result = cards.length > 0 ? true : false;   //是否有可以出的牌
                 this._viewUI.btn_tishi.mouseEnabled = result;
                 this._viewUI.img_tishi.visible = !result;
-                if (this._guanShang == 1) {
-                    this._viewUI.img_tishi.visible = false;
-                    this._viewUI.btn_pass.mouseEnabled = !result;
-                    this._viewUI.btn_chupai.visible = result;
-                    this._viewUI.img_chupai.visible = result;
-                    this._viewUI.btn_tishi.visible = result;
-                } else if (this._guanShang == 0) {
-                    this._viewUI.btn_pass.mouseEnabled = true;
-                    this._viewUI.img_pass.visible = false;
-                }
                 //选中的牌
                 let choose = this._paodekuaiMgr.promptBtn(this._chooseCards, this._playCardsConfig.card_type, this._playCardsConfig.card_len, this._playCardsConfig.max_val, false);
                 if (choose.length == 0) {   //不能出的牌
@@ -1627,15 +1628,33 @@ module gamerpaodekuai.page {
                     this._viewUI.btn_chupai.mouseEnabled = true;
                     this._viewUI.img_chupai.visible = false;
                 }
-            }
-            if (this._guanShang == 1) {
-                this._viewUI.btn_pass.visible = false;
-                this._viewUI.img_pass.visible = false;
-                this._viewUI.img_tishi.centerX = this._viewUI.img_pass.centerX;
-                this._viewUI.btn_tishi.centerX = this._viewUI.btn_pass.centerX;
-            } else if (this._guanShang == 0) {
-                this._viewUI.img_tishi.centerX = 0;
-                this._viewUI.btn_tishi.centerX = -1;
+                if (this._guanShang == 1) {
+                    //必出
+                    this._viewUI.img_tishi.visible = false;
+                    this._viewUI.btn_pass.mouseEnabled = !result;
+                    this._viewUI.btn_chupai.visible = result;
+                    this._viewUI.img_chupai.visible = result;
+                    this._viewUI.btn_tishi.visible = result;
+                    if (result) {
+                        //有可以出的牌
+                        this._viewUI.btn_pass.visible = false;
+                        this._viewUI.img_pass.visible = false;
+                        this._viewUI.btn_tishi.centerX = this._viewUI.btn_pass.centerX;
+                        this._viewUI.img_tishi.centerX = this._viewUI.img_pass.centerX;
+                    } else {
+                        //没有可以出的牌
+                        this._viewUI.btn_pass.visible = true;
+                        if (this._viewUI.btn_pass.mouseEnabled) this._viewUI.img_pass.visible = false;
+                        if (!this._viewUI.btn_tishi.visible) {
+                            this._viewUI.btn_pass.centerX = this._viewUI.btn_tishi.centerX;
+                            this._viewUI.img_pass.centerX = this._viewUI.img_pass.centerX;
+                        }
+                    }
+                } else if (this._guanShang == 0) {
+                    //非必出
+                    this._viewUI.btn_pass.mouseEnabled = true;
+                    this._viewUI.img_pass.visible = false;
+                }
             }
         }
 
