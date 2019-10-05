@@ -38,8 +38,15 @@ module gamerpaodekuai.page {
                     this._game.uiRoot.general.open(DatingPageDef.PAGE_PDK_CREATE_CARDROOM);
                     this.close();
                     break;
-                case this._viewUI.btn_close:
-                    this._game.sceneObjectMgr.leaveStory(true);
+                case this._viewUI.btn_tc:
+                    let paodekuaiStory = this._game.sceneObjectMgr.story as RpaodekuaiStory;
+                    let mapInfo = this._game.sceneObjectMgr.mapInfo as MapInfo;
+                    mapInfo = mapInfo as RpaodekuaiMapInfo;
+                    let mainUnit = this._game.sceneObjectMgr.mainUnit;
+                    if (!paodekuaiStory || !mapInfo || !mainUnit) return;
+                    paodekuaiStory.endRoomCardGame(mainUnit.GetIndex(), mapInfo.GetCardRoomId());
+                    this._game.sceneObjectMgr.leaveStory();
+                    this.close();
                     break
                 default:
                     break;
@@ -52,13 +59,13 @@ module gamerpaodekuai.page {
             this._viewUI.btn_create_room.visible = this._viewUI.box_js_info.visible = this._isGameEnd;
             let str = StringU.substitute("本轮游戏已满{0}局...", HtmlFormat.addHtmlColor(this.dataSource[0], TeaStyle.COLOR_YELLOW));
             TextFieldU.setHtmlText(this._viewUI.lb_js, str);
-            this._viewUI.btn_close.visible = this._isGameEnd;
+            this._viewUI.btn_tc.visible = this._isGameEnd;
             if (isEventOn) {
                 this._viewUI.btn_create_room.on(LEvent.CLICK, this, this.onBtnClickWithTween);
-                this._viewUI.btn_close.on(LEvent.CLICK, this, this.onBtnClickWithTween);
+                this._viewUI.btn_tc.on(LEvent.CLICK, this, this.onBtnClickWithTween);
             } else {
                 this._viewUI.btn_create_room.off(LEvent.CLICK, this, this.onBtnClickWithTween);
-                this._viewUI.btn_close.off(LEvent.CLICK, this, this.onBtnClickWithTween);
+                this._viewUI.btn_tc.off(LEvent.CLICK, this, this.onBtnClickWithTween);
             }
         }
 

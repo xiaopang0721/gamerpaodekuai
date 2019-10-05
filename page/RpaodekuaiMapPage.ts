@@ -55,7 +55,7 @@ module gamerpaodekuai.page {
         private _promptHitCount: number = 0;    //提示按钮点击次数
         private _isCurQiangGuan: boolean = false; //当局是否抢关了
         private _qgCurResult: number = 0;       //当局抢关结果  1：成功 2：失败
-        private _curQGIndex: number = -1;         //当前抢关人的座位号
+        private _curQGUnit: Unit;         //当前抢关人的座位号
         private _playCardsConfig: any = {    //当前打出去的牌
             "player": 0,            //出牌座位
             "card_type": 0,         //出牌类型
@@ -165,10 +165,7 @@ module gamerpaodekuai.page {
 
         //打开时要处理的东西
         private updateViewUI(): void {
-            this._countTP = 0;
             this._qgCurResult = 0;
-            this._curQGIndex = -1;
-            this._isTouPiaoing = false;
             this._viewUI.img_menu.visible = false;
             this._viewUI.box_btn.visible = false;
             this._viewUI.text_cardroomid.visible = true;
@@ -719,10 +716,14 @@ module gamerpaodekuai.page {
             }
             if (state == MAP_STATUS.MAP_STATE_QIANGGUAN) {
                 if (betPos == mainIdx) {
+                    this._viewUI.text_qz_info.visible = false;
                     this._viewUI.box_qiang.visible = true;
+                } else {
+                    this._viewUI.text_qz_info.visible = true;
                 }
             } else {
                 this._viewUI.box_qiang.visible = false;
+                this._viewUI.text_qz_info.visible = false;
             }
             if (state == MAP_STATUS.MAP_STATE_PLAYING) {
                 this._viewUI.btn_tuoguan.visible = true;
@@ -748,6 +749,9 @@ module gamerpaodekuai.page {
             } else {
                 this._viewUI.box_btn.visible = false;
                 this._viewUI.btn_tuoguan.visible = false;
+                this._viewUI.box_tg.visible = false;
+                this._viewUI.btn_qxtg.visible = false;
+                this._viewUI.tg_info.visible = false;
             }
             if (state == MAP_STATUS.MAP_STATE_WAIT) {
                 this.openSettlePage();
@@ -816,7 +820,7 @@ module gamerpaodekuai.page {
                 if (unit) {
                     let obj = {
                         isMain: this._game.sceneObjectMgr.mainUnit.GetIndex() == i, //是否是主玩家
-                        isQG: this._curQGIndex == (i - 1), //是否是抢关人
+                        isQG: this._curQGUnit == unit, //是否是抢关人
                         name: unit.GetName(),           //名字
                         point: point,           //积分
                         totalPoint: EnumToString.getPointBackNum(unit.GetMoney(), 2),   //累计积分
@@ -844,7 +848,7 @@ module gamerpaodekuai.page {
             this._countDown = mapinfo.GetCountDown();
         }
 
-        update(diff:number){
+        update(diff: number) {
             super.update(diff);
             this._toupiaoMgr && this._toupiaoMgr.update(diff);
         }
@@ -1156,9 +1160,9 @@ module gamerpaodekuai.page {
                             }
                             if (idx == mainIdx) {
                                 this._viewUI.box_qiang.visible = false;
-                                this._viewUI.text_qz_info.visible = false;
-                            } else {
                                 this._viewUI.text_qz_info.visible = true;
+                            } else {
+                                this._viewUI.text_qz_info.visible = false;
                             }
                             if (!this._paodekuaiMgr.isReLogin) {
                                 let unit = this._game.sceneObjectMgr.getUnitByIdx(idx);
@@ -1181,11 +1185,12 @@ module gamerpaodekuai.page {
                             let idx = info.SeatIndex;
                             this._viewUI.text_qz_info.visible = false;
                             let qiang_pos = info.qiang_pos;
-                            this._curQGIndex = (qiang_pos - mainIdx + this._unitCounts) % this._unitCounts;//客户端座位
+                            this._curQGUnit = this._game.sceneObjectMgr.getUnitByIdx(qiang_pos);
+                            let uiQGindex = (qiang_pos - mainIdx + this._unitCounts) % this._unitCounts;//客户端座位
                             //抢关成功特效
                             this._viewUI.view_xs.visible = true;
                             this._viewUI.view_xs.ani1.play(0, false);
-                            this._viewUI.view_xs.ani1.on(LEvent.COMPLETE, this, this.xsViewAniComplete, [this._curQGIndex]);
+                            this._viewUI.view_xs.ani1.on(LEvent.COMPLETE, this, this.xsViewAniComplete, [uiQGindex]);
                         }
                     }
                     case 33: {   //报单
@@ -1872,7 +1877,7 @@ module gamerpaodekuai.page {
                     TongyongPageDef.ins.alertRecharge(StringU.substitute("牌局尚未结束，需发起投票，<span color='{0}'>{1}</span>方可解散。", TeaStyle.COLOR_GREEN, "全员同意"), () => {
                         //发起投票
                         this._game.network.call_rpaodekuai_vote(1);
-                    }, null, true, TongyongPageDef.TIPS_SKIN_STR["fqtq"]);
+                    }, null, true, TongyongPageDef.TIPS_SKIN_STR["fqtq"],TongyongPageDef.TIPS_SKIN_STR["title_pdk"]);
                 }
             } else {
                 //不在游戏中
@@ -1885,7 +1890,7 @@ module gamerpaodekuai.page {
                         TongyongPageDef.ins.alertRecharge("游戏未开始，解散房间不会扣除金币！\n是否解散房间？", () => {
                             this._paodekuaiStory.endRoomCardGame(mainUnit.GetIndex(), this._mapInfo.GetCardRoomId());
                             this._game.sceneObjectMgr.leaveStory();
-                        }, null, true, TongyongPageDef.TIPS_SKIN_STR["js"], null, null, TongyongPageDef.TIPS_SKIN_STR["btn_red"]);
+                        }, null, true, TongyongPageDef.TIPS_SKIN_STR["js"], TongyongPageDef.TIPS_SKIN_STR["title_pdk"], null, TongyongPageDef.TIPS_SKIN_STR["btn_red"]);
                     }
                 }
             }
