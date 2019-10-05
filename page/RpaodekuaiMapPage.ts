@@ -803,7 +803,7 @@ module gamerpaodekuai.page {
                 if (unit) {
                     let obj = {
                         isMain: this._game.sceneObjectMgr.mainUnit.GetIndex() == i, //是否是主玩家
-                        isQG: this._curQGIndex == i, //是否是抢关人
+                        isQG: this._curQGIndex == (i - 1), //是否是抢关人
                         name: unit.GetName(),           //名字
                         point: point,           //积分
                         totalPoint: EnumToString.getPointBackNum(unit.GetMoney(), 2),   //累计积分
@@ -1158,10 +1158,11 @@ module gamerpaodekuai.page {
                                 this._viewUI.view_dzjb.ani1.play(0, false);
                                 this._viewUI.view_dzjb.ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI.view_dzjb, () => { }]);
                             }
-                            this._viewUI.text_qz_info.visible = true;
                             if (idx == mainIdx) {
                                 this._viewUI.box_qiang.visible = false;
                                 this._viewUI.text_qz_info.visible = false;
+                            } else {
+                                this._viewUI.text_qz_info.visible = true;
                             }
                             if (!this._paodekuaiMgr.isReLogin) {
                                 let unit = this._game.sceneObjectMgr.getUnitByIdx(idx);
@@ -1850,7 +1851,8 @@ module gamerpaodekuai.page {
             let dataInfo = dataSource;
             this._game.qifuMgr.showFlayAni(this._viewUI.view_player0.img_head, this._viewUI, dataSource, (dataInfo) => {
                 //相对应的玩家精灵做出反应
-                this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_touxiang + "f_{0}2.png", this._nameStrInfo[dataInfo.qf_id - 1]);
+                let nameStrInfo = ["xs", "px", "gsy", "gg", "cs", "tdg"];
+                this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_touxiang + "f_{0}2.png", nameStrInfo[dataInfo.qf_id - 1]);
                 this.onUpdateUnit(dataInfo.qifu_index);
             });
         }
