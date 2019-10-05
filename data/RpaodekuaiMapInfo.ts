@@ -31,7 +31,7 @@ module gamerpaodekuai.data {
 				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN);
 			}
 			if (isNew || mask.GetBit(MapField.MAP_INT_TOU_PIAO_TIME)) {
-				this._sceneObjectMgr.event(RpaodekuaiMapInfo.EVENT_PDK_TOUPIAO_TIME);
+				this._sceneObjectMgr.event(TouPiaoMgr.EVENT_TOUPIAO_TIME);
 			}
 		}
 

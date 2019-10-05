@@ -33,7 +33,6 @@ module gamerpaodekuai.page {
         private _battleIndex: number = -1;
         private _curStatus: number; //当前地图状态
         private _countDown: number; //倒计时结束时间
-        private _tpEndTime: number;  //投票倒计时结束时间
         private _mainIdx: number;   //主玩家座位号
         private _clipList: Array<PaodekuaiClip> = [];//飘字
         private _winerPos: any = [];  //赢家
@@ -42,8 +41,6 @@ module gamerpaodekuai.page {
         private _isPlaying: boolean = false;    //是否进行中
         private _isGameEnd: boolean = false;    //是否本局游戏结束
         private _isPlayXiPai: boolean = false;    //是否播放洗牌
-        private _isTouPiaoing: boolean = false;      //是否投票中
-        private _countTP: number = 0;             //投票人数
         private _pointTemp: any = [];   //每局积分
         private _pointBomb: any = [];   //每局炸弹积分
         private _unitCounts: number;    //最大玩家数
@@ -67,6 +64,7 @@ module gamerpaodekuai.page {
         };
         private _lightPointTemp: Array<any> = [];  //指示灯位置
         private _xsPos: Array<any> = []          //先手动画飞向的动画  top,ceterX,rotation
+        private _toupiaoMgr: TouPiaoMgr;//投票解散管理器
 
         constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
             super(v, onOpenFunc, onCloseFunc);
@@ -137,7 +135,6 @@ module gamerpaodekuai.page {
             this._game.sceneObjectMgr.on(RpaodekuaiMapInfo.EVENT_PDK_STATUS_CHECK, this, this.onUpdateMapState);
             this._game.sceneObjectMgr.on(RpaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK, this, this.updateBattledInfo);
             this._game.sceneObjectMgr.on(RpaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN, this, this.updateCountDown);//倒计时更新
-            this._game.sceneObjectMgr.on(RpaodekuaiMapInfo.EVENT_PDK_TOUPIAO_TIME, this, this.updateTouPiaoTime);
             this._game.mainScene.on(SceneOperator.AVATAR_MOUSE_CLICK_HIT, this, this.onClickCards);
             this._game.mainScene.on(SceneOperator.AVATAR_MOUSE_UP_HIT_ALL, this, this.onChooseCards);
             this._viewUI.view_xipai.ani_xipai.on(LEvent.COMPLETE, this, this.onWashCardOver);
@@ -336,10 +333,10 @@ module gamerpaodekuai.page {
                     this._game.uiRoot.general.open(DatingPageDef.PAGE_CHONGZHI);
                     break
                 case this._viewUI.view_tp.btn_ok:
-                    this._game.network.call_voting(1);
+                    this._game.network.call_rpaodekuai_vote(1);
                     break
                 case this._viewUI.view_tp.btn_refuse:
-                    this._game.network.call_voting(0);
+                    this._game.network.call_rpaodekuai_vote(0);
                     break
                 default:
                     break;
@@ -662,6 +659,22 @@ module gamerpaodekuai.page {
             let state = this._mapInfo.GetMapState();
             let round = this._mapInfo.GetRound() + 1;
             this._viewUI.view_paixie.visible = state < MAP_STATUS.MAP_STATE_DEAL_END;
+            //初始化投票组件
+            if (!this._toupiaoMgr && this._curStatus > MAP_STATUS.MAP_STATE_CARDROOM_WAIT) {
+                this._toupiaoMgr = TouPiaoMgr.ins;
+                this._toupiaoMgr.initUI(this._viewUI.view_tp, this._mapInfo, this.getUnitCount(), RpaodekuaiPageDef.GAME_NAME);
+            }
+            if (state == MAP_STATUS.MAP_STATE_SHUFFLE) {
+                //游戏开始特效
+                this._viewUI.box_view.addChild(this._ksyxView);
+                this._ksyxView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._ksyxView]);
+                this._ksyxView.ani1.play(1, false);
+            } else {
+                if (this._ksyxView.ani1.isPlaying) {
+                    this._ksyxView.ani1.gotoAndStop(1);
+                    this._ksyxView.ani1.play(1, false);
+                }
+            }
             if (state == MAP_STATUS.MAP_STATE_DEAL) {
                 this._viewUI.btn_back.skin = PathGameTongyong.ui_tongyong_general + "btn_js.png";
                 this._viewUI.btn_back.tag = 2;
@@ -830,27 +843,10 @@ module gamerpaodekuai.page {
             if (!mapinfo) return;
             this._countDown = mapinfo.GetCountDown();
         }
-        //更新投票倒计时时间戳
-        private updateTouPiaoTime(): void {
-            let mapinfo: RpaodekuaiMapInfo = this._game.sceneObjectMgr.mapInfo as RpaodekuaiMapInfo;
-            if (!mapinfo) return;
-            this._tpEndTime = mapinfo.GetTouPiaoTime();
-        }
 
-        update(diff: number): void {
+        update(diff:number){
             super.update(diff);
-            if (this._isTouPiaoing) {
-                let curTime = this._game.sync.serverTimeBys;
-                let txTime = this._tpEndTime - curTime;
-                if (txTime > 0) {
-                    this._viewUI.view_tp.pro_time.value = txTime / 30;
-                } else {
-                    //倒计时结束
-                    this._game.showTips("很遗憾，尚有玩家未同意解散房间");
-                    this._isTouPiaoing = false;
-                    this.hideViewTX();
-                }
-            }
+            this._toupiaoMgr && this._toupiaoMgr.update(diff);
         }
 
         //操作倒计时
@@ -1279,47 +1275,14 @@ module gamerpaodekuai.page {
                         if (this._battleIndex < i) {
                             this._battleIndex = i;
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoSponsorVote;
-                            if (info.state == 1) {
-                                //投票开始
-                                this._isTouPiaoing = true;
-                                this.showViewTX();
-                            } else if (info.state == 2) {
-                                //所有人都投了票,提前结束游戏         
-                                if (this._isTouPiaoing) {
-                                    if (info.tpResult == 1) {
-                                        this._game.showTips("解散投票通过，本局结束后房间解散");
-                                    } else if (info.tpResult == 2) {
-                                        this._game.showTips("很遗憾，尚有玩家未同意解散房间");
-                                    }
-                                    this._isTouPiaoing = false;
-                                    this.hideViewTX();
-                                }
-                            }
+                            this._toupiaoMgr.onBattleUpdate(info);
                         }
                         break;
                     case 41:    //投票
                         if (this._battleIndex < i) {
                             this._battleIndex = i;
-                            if (!this._isTouPiaoing) return;
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoVoting;
-                            let idx = info.SeatIndex;
-                            let unit = this._game.sceneObjectMgr.getUnitByIdx(idx);
-                            if (unit) {
-                                let name = unit.GetName();
-                                let strTip: string;
-                                if (info.tpType == 1) strTip = StringU.substitute("{0}<span color='{1}'>{2}</span>解散房间", name, TeaStyle.COLOR_GREEN, "同意");
-                                else if (info.tpType == 0) strTip = StringU.substitute("{0}<span color='{1}'>{2}</span>解散房间", name, TeaStyle.COLOR_RED, "拒绝");
-                                this._game.showTips(strTip);
-                                if (!this._countTP || this._countTP == undefined) this._countTP = 0;
-                                this._countTP++;
-                                this._viewUI.view_tp["clip_" + this._countTP].index = (info.tpType == 1 ? 1 : 0);
-                                if (unit == mainUnit) {
-                                    //自己投过票了
-                                    this._viewUI.view_tp.btn_ok.visible = false;
-                                    this._viewUI.view_tp.btn_refuse.visible = false;
-                                    this._viewUI.view_tp.img_bg.height = 102;
-                                }
-                            }
+                            this._toupiaoMgr.onBattleUpdate(info);
                         }
                         break;
                 }
@@ -1898,9 +1861,9 @@ module gamerpaodekuai.page {
             let mainUnit: Unit = this._game.sceneObjectMgr.mainUnit;
             if (!mainUnit) return;
             if (this._isPlaying) {
+                if (!this._toupiaoMgr) return;
                 //是否在投票中
-                let tpEndTime = this._mapInfo.GetTouPiaoTime();
-                if (this._isTouPiaoing) {
+                if (this._toupiaoMgr.isTouPiaoing) {
                     this._game.showTips("已发起投票，请等待投票结果");
                     return;
                 }
@@ -1908,7 +1871,7 @@ module gamerpaodekuai.page {
                     //在游戏中 发起投票选项
                     TongyongPageDef.ins.alertRecharge(StringU.substitute("牌局尚未结束，需发起投票，<span color='{0}'>{1}</span>方可解散。", TeaStyle.COLOR_GREEN, "全员同意"), () => {
                         //发起投票
-                        this._game.network.call_sposor_vote();
+                        this._game.network.call_rpaodekuai_vote(1);
                     }, null, true, TongyongPageDef.TIPS_SKIN_STR["fqtq"]);
                 }
             } else {
@@ -2004,7 +1967,6 @@ module gamerpaodekuai.page {
             this._game.sceneObjectMgr.off(RpaodekuaiMapInfo.EVENT_PDK_STATUS_CHECK, this, this.onUpdateMapState);
             this._game.sceneObjectMgr.off(RpaodekuaiMapInfo.EVENT_PDK_BATTLE_CHECK, this, this.updateBattledInfo);
             this._game.sceneObjectMgr.off(RpaodekuaiMapInfo.EVENT_PDK_COUNT_DOWN, this, this.updateCountDown);//倒计时更新
-            this._game.sceneObjectMgr.off(RpaodekuaiMapInfo.EVENT_PDK_TOUPIAO_TIME, this, this.updateTouPiaoTime);
             this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_ADD_UNIT, this, this.onUnitAdd);
             this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_UNIT_NAME_CHANGE, this, this.onUnitComing);
             this._game.sceneObjectMgr.off(SceneObjectMgr.EVENT_REMOVE_UNIT, this, this.onUnitRemove);
@@ -2084,6 +2046,10 @@ module gamerpaodekuai.page {
                 this._game.stopAllSound();
                 this.setCardRoomBtnEvent(false);
                 this.clearCardsView();
+                if (this._toupiaoMgr) {
+                    this._toupiaoMgr.clear(true);
+                    this._toupiaoMgr = null;
+                }
             }
 
             super.close();
