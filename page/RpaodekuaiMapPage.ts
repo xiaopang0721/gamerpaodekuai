@@ -65,6 +65,7 @@ module gamerpaodekuai.page {
         private _lightPointTemp: Array<any> = [];  //指示灯位置
         private _xsPos: Array<any> = []          //先手动画飞向的动画  top,ceterX,rotation
         private _toupiaoMgr: TouPiaoMgr;//投票解散管理器
+        private _typeFirst: number   //当局先手类型
 
         constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
             super(v, onOpenFunc, onCloseFunc);
@@ -166,6 +167,7 @@ module gamerpaodekuai.page {
         //打开时要处理的东西
         private updateViewUI(): void {
             this._qgCurResult = 0;
+            this._typeFirst = 0;
             this._viewUI.img_menu.visible = false;
             this._viewUI.box_btn.visible = false;
             this._viewUI.text_cardroomid.visible = true;
@@ -439,6 +441,7 @@ module gamerpaodekuai.page {
                             this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg1.png";
                             this._viewUI.box_tg.visible = true;
                             this._viewUI.btn_qxtg.visible = true;
+                            this._viewUI.tg_info.visible = false;
                             // this._paodekuaiMgr.setTG(true);
                         }
                     } else if (unit.GetIdentity() == 0) {
@@ -447,6 +450,7 @@ module gamerpaodekuai.page {
                             this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg0.png";
                             this._viewUI.box_tg.visible = false;
                             this._viewUI.btn_qxtg.visible = false;
+                            this._viewUI.tg_info.visible = false;
                             // this._paodekuaiMgr.setTG(false);
                         }
                     }
@@ -710,7 +714,6 @@ module gamerpaodekuai.page {
                         let unit = this._game.sceneObjectMgr.getUnitByIdx(seat);
                         this._viewUI["box_count" + i].visible = unit;
                         this._viewUI["lab_count" + i].text = this._surplusCards[i];
-                        if (this._surplusCards[i] <= 0) this._viewUI["img_finish" + i].visible = true;
                     }
                 }
             }
@@ -988,7 +991,7 @@ module gamerpaodekuai.page {
                             if (posIdx > 0) {
                                 this._viewUI["box_count" + posIdx].visible = true;
                                 this._viewUI["lab_count" + posIdx].text = this._surplusCards[posIdx];
-                                if (this._surplusCards[i] <= 0) this._viewUI["img_finish" + i].visible = true;
+                                if (this._surplusCards[posIdx] <= 0) this._viewUI["img_finish" + posIdx].visible = true;
                             }
                             let type = info.CardType;
                             if (type >= CARD_TYPE.CARDS_TYPE_THREE_FEIJI) {
@@ -1110,7 +1113,7 @@ module gamerpaodekuai.page {
                             this._battleIndex = i;
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoSeeCard;
                             let idx = info.SeatIndex;
-                            let typeFirst = info.extra; //先手类型 1：赢家 2：黑桃3
+                            let typeFirst = this._typeFirst = info.extra; //先手类型 1：赢家 2：黑桃3
                             if (this._qiangGuan) {
                                 //抢关不做操作
 
@@ -1124,13 +1127,13 @@ module gamerpaodekuai.page {
                                     this._viewUI.view_hts.img_pai.skin = PathGameTongyong.ui_tongyong_pai + "42.png";;
                                     this._viewUI.view_hts.img_jb.skin = Path_game_rpaodekuai.ui_paodekuai + "tu_sc.png";
                                 }
+                                this._viewUI.view_hts.visible = true;
+                                this._viewUI.view_hts.ani1.play(0, false);
+                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx])
                                 this._viewUI["img_tishi" + posIdx].visible = true;
                                 this._viewUI["img_tishi" + posIdx].img_info.skin = Path_game_rpaodekuai.ui_paodekuai + (typeFirst == 1 ? "qipai/tu_yjxc.png" : "qipai/tu_htssc.png");
                                 this._viewUI["img_tishi" + posIdx].ani1.play(0, false);
                                 this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
-                                this._viewUI.view_hts.visible = true;
-                                this._viewUI.view_hts.ani1.play(0, false);
-                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx])
                             }
                         }
                         break;
@@ -1185,12 +1188,29 @@ module gamerpaodekuai.page {
                             let idx = info.SeatIndex;
                             this._viewUI.text_qz_info.visible = false;
                             let qiang_pos = info.qiang_pos;
+                            let qiang_type = info.qiang_type;
                             this._curQGUnit = this._game.sceneObjectMgr.getUnitByIdx(qiang_pos);
                             let uiQGindex = (qiang_pos - mainIdx + this._unitCounts) % this._unitCounts;//客户端座位
                             //抢关成功特效
-                            this._viewUI.view_xs.visible = true;
-                            this._viewUI.view_xs.ani1.play(0, false);
-                            this._viewUI.view_xs.ani1.on(LEvent.COMPLETE, this, this.xsViewAniComplete, [uiQGindex]);
+                            if (qiang_type == 1) {
+                                //有人抢关
+                                this._viewUI.view_xs.visible = true;
+                                this._viewUI.view_xs.ani1.play(0, false);
+                                this._viewUI.view_xs.ani1.on(LEvent.COMPLETE, this, this.xsViewAniComplete, [uiQGindex]);
+                            } else {
+                                //按照谁先出播放特效
+                                //飞赢家或者黑桃三特效
+                                if (this._typeFirst == 1) {
+                                    this._viewUI.view_hts.img_pai.skin = PathGameTongyong.ui_tongyong_pai + "0.png";
+                                    this._viewUI.view_hts.img_jb.skin = Path_game_rpaodekuai.ui_paodekuai + "tu_dz.png";
+                                } else if (this._typeFirst == 2) {
+                                    this._viewUI.view_hts.img_pai.skin = PathGameTongyong.ui_tongyong_pai + "42.png";;
+                                    this._viewUI.view_hts.img_jb.skin = Path_game_rpaodekuai.ui_paodekuai + "tu_sc.png";
+                                }
+                                this._viewUI.view_hts.visible = true;
+                                this._viewUI.view_hts.ani1.play(0, false);
+                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [uiQGindex])
+                            }
                         }
                     }
                     case 33: {   //报单
@@ -1580,7 +1600,7 @@ module gamerpaodekuai.page {
             this._viewUI.img_tishi.centerX = -1;
             this._viewUI.btn_pass.centerX = -187;
             this._viewUI.img_pass.centerX = -187;
-            if (this._playCardsConfig.player == mainIdx || this._playCardsConfig.card_type == 0) {  //有发牌权或者一开始就是你先出牌
+            if (this._playCardsConfig.player == mainIdx || this._playCardsConfig.card_type == 0) {  //有发牌权，不需要定义特别类别
                 this._viewUI.img_pass.visible = true;
                 this._viewUI.btn_pass.mouseEnabled = false;
                 this._viewUI.img_tishi.visible = false;
@@ -1654,6 +1674,18 @@ module gamerpaodekuai.page {
                     //非必出
                     this._viewUI.btn_pass.mouseEnabled = true;
                     this._viewUI.img_pass.visible = false;
+                }
+                //判断托管状态得信息
+                if (this._game.sceneObjectMgr.mainUnit.GetIdentity() == 1) {
+                    //托管中
+                    if (!result) {
+                        //没有可出得牌
+                        this._viewUI.tg_info.visible = true;
+                        this._viewUI.btn_qxtg.visible = false;
+                    } else {
+                        this._viewUI.tg_info.visible = false;
+                        this._viewUI.btn_qxtg.visible = true;
+                    }
                 }
             }
         }
