@@ -14,6 +14,20 @@ module ui.nqp.game_ui.paodekuai.component {
 }
 
 module ui.nqp.game_ui.paodekuai.component {
+    export class Effect_dfjbUI extends View {
+		public ani1:Laya.FrameAnimation;
+
+        public static  uiView:any ={"type":"View","props":{"width":1280,"height":720},"child":[{"type":"Image","props":{"skin":"paodekuai_ui/game_ui/paodekuai/tu_dizhujiabei.png","centerY":0,"centerX":0,"anchorY":0.5,"anchorX":0.5},"compId":2}],"animations":[{"nodes":[{"target":2,"keyframes":{"y":[{"value":360,"tweenMethod":"linearNone","tween":true,"target":2,"key":"y","index":0},{"value":360,"tweenMethod":"linearNone","tween":true,"target":2,"label":null,"key":"y","index":45},{"value":340,"tweenMethod":"linearNone","tween":true,"target":2,"key":"y","index":52}],"x":[{"value":387,"tweenMethod":"linearNone","tween":true,"target":2,"key":"x","index":0},{"value":576.75,"tweenMethod":"linearNone","tween":true,"target":2,"key":"x","index":2},{"value":640,"tweenMethod":"linearNone","tween":true,"target":2,"label":null,"key":"x","index":4},{"value":640,"tweenMethod":"linearNone","tween":true,"target":2,"label":null,"key":"x","index":45}],"alpha":[{"value":0,"tweenMethod":"linearNone","tween":true,"target":2,"key":"alpha","index":0},{"value":1,"tweenMethod":"linearNone","tween":true,"target":2,"label":null,"key":"alpha","index":4},{"value":1,"tweenMethod":"linearNone","tween":true,"target":2,"label":null,"key":"alpha","index":45},{"value":0,"tweenMethod":"linearNone","tween":true,"target":2,"key":"alpha","index":52}]}}],"name":"ani1","id":1,"frameRate":24,"action":0}]};
+        constructor(){ super()}
+        createChildren():void {
+        
+            super.createChildren();
+            this.createView(ui.nqp.game_ui.paodekuai.component.Effect_dfjbUI.uiView);
+        }
+    }
+}
+
+module ui.nqp.game_ui.paodekuai.component {
     export class Effect_feijiUI extends View {
 		public ani1:Laya.FrameAnimation;
 
