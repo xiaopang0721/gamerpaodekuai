@@ -161,7 +161,6 @@ module gamerpaodekuai.page {
             this._game.qifuMgr.on(QiFuMgr.QIFU_FLY, this, this.qifuFly);
 
             this.setCardRoomBtnEvent(true);
-
         }
 
         //打开时要处理的东西
@@ -387,8 +386,9 @@ module gamerpaodekuai.page {
         private onUnitComing(): void {
             for (let i = 0; i < this._unitPlayArr.length; i++) {
                 let unitObj = this._unitPlayArr[i];
-                let name = unitObj.unit.GetName();
                 let unit: Unit = unitObj.unit;
+                let name = unit.GetName();
+                if (!name) continue;
                 //欢迎进场,不能是自己,且没播过，且有名字
                 if (this._game.sceneObjectMgr.mainUnit != unit && !unitObj.isPlay && name) {
                     this._game.showTips(StringU.substitute("欢迎{0}加入房间", name));
@@ -406,6 +406,7 @@ module gamerpaodekuai.page {
             }
             this._unitPlayArr.push(obj);
             this.onUpdateUnit();
+            this.onUnitComing();
         }
 
         //玩家出去了
@@ -554,7 +555,6 @@ module gamerpaodekuai.page {
                     this.updateCountDown();
                 }
                 this.updateCardRoomDisplayInfo();
-                this.onUpdateUnit();
             }
         }
 
@@ -890,6 +890,9 @@ module gamerpaodekuai.page {
                 this._viewUI.view_time.txt_time.text = time.toString();
                 if (time == 3 && !this._viewUI.view_time.ani1.isPlaying) {
                     this._viewUI.view_time.ani1.play(1, true);
+                } else {
+                    if (time > 3 && this._viewUI.view_time.ani1.isPlaying)
+                        this._viewUI.view_time.ani1.gotoAndStop(24);
                 }
             } else {
                 this._viewUI.view_time.visible = false;
