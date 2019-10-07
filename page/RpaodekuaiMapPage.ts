@@ -1942,7 +1942,7 @@ module gamerpaodekuai.page {
                     }, true, TongyongPageDef.TIPS_SKIN_STR["qd"]);
                 } else {
                     if (!this._isGameEnd) {
-                        TongyongPageDef.ins.alertRecharge("游戏未开始，解散房间不会扣除金币！\n是否解散房间？", () => {
+                        TongyongPageDef.ins.alertRecharge("游戏未开始，解散不会扣除房费！\n是否解散房间？", () => {
                             this._paodekuaiStory.endRoomCardGame(mainUnit.GetIndex(), this._mapInfo.GetCardRoomId());
                             this._game.sceneObjectMgr.leaveStory();
                         }, null, true, TongyongPageDef.TIPS_SKIN_STR["js"], TongyongPageDef.TIPS_SKIN_STR["title_pdk"], null, TongyongPageDef.TIPS_SKIN_STR["btn_red"]);
