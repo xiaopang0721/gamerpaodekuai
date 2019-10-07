@@ -76,7 +76,7 @@ module gamerpaodekuai.page {
                 PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "pai.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong + "qifu.atlas",
+                DatingPath.atlas_dating_ui + "qifu.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "fk.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "chongzhi.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "general/effect/fapai_1.atlas",
@@ -1930,6 +1930,12 @@ module gamerpaodekuai.page {
                 //是否在投票中
                 if (this._toupiaoMgr.isTouPiaoing) {
                     this._game.showTips("已发起投票，请等待投票结果");
+                    return;
+                }
+                //下次发起投票的时间
+                let nextTime = Math.floor(this._mapInfo.GetTouPiaoTime() + 60 - this._game.sync.serverTimeBys);
+                if (nextTime > 0) {
+                    this._game.showTips(StringU.substitute("请在{0}s之后再发起投票", nextTime));
                     return;
                 }
                 //在游戏中 发起投票选项
