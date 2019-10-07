@@ -643,6 +643,7 @@ module gamerpaodekuai.page {
             this._viewUI.text_cardroomid.visible = false;
             this._isGameEnd = true;
             this._paodekuaiMgr.resetData();
+            this._toupiaoMgr.resetData();            
             this._paodekuaiMgr.clear();
             this.resetData();
             this._battleIndex = -1;
@@ -683,7 +684,7 @@ module gamerpaodekuai.page {
             } else {
                 this._viewUI.view_paixie.ani2.gotoAndStop(0);
             }
-            this._viewUI.text_round.text = StringU.substitute("第{0}/{1}局", round, this._mapInfo.GetCardRoomGameNumber()); //"局数：" + round + "/" + this._mapInfo.GetCardRoomGameNumber();
+            this._viewUI.text_round.text = StringU.substitute("第{0}/{1}局", round, this._mapInfo.GetCardRoomGameNumber());
             this._isPlaying = state >= MAP_STATUS.MAP_STATE_SHUFFLE && state < MAP_STATUS.MAP_STATE_END;
             if (this._isPlaying) {  //隐藏下按钮
                 this._viewUI.view_cardroom.visible = false;
@@ -764,6 +765,7 @@ module gamerpaodekuai.page {
                 this.resetData();
                 this.clearMoneyImg();
                 this._paodekuaiMgr.resetData();
+                this._toupiaoMgr.resetData()
                 this._paodekuaiMgr.clear();
             }
             if (state == MAP_STATUS.MAP_STATE_SETTLE) {
@@ -780,6 +782,7 @@ module gamerpaodekuai.page {
                 this.resetData();
                 this.clearMoneyImg();
                 this._paodekuaiMgr.resetData();
+                this._toupiaoMgr.resetData()
                 this._paodekuaiMgr.clear();
                 this._battleIndex = -1;
             }
@@ -1638,26 +1641,13 @@ module gamerpaodekuai.page {
                 let result = cards.length > 0 ? true : false;   //是否有可以出的牌
                 this._viewUI.btn_tishi.mouseEnabled = result;
                 this._viewUI.img_tishi.visible = !result;
-                //选中的牌
-                let choose = this._paodekuaiMgr.promptBtn(this._chooseCards, this._playCardsConfig.card_type, this._playCardsConfig.card_len, this._playCardsConfig.max_val, false);
-                if (choose.length == 0) {   //不能出的牌
-                    for (let i = 0; i < this._paodekuaiMgr.allCards.length; i++) {
-                        let card = this._paodekuaiMgr.allCards[i];
-                        card.toggle = false;
-                    }
-                    this._chooseCards = [];
-                    this._viewUI.btn_chupai.mouseEnabled = false;
-                    this._viewUI.img_chupai.visible = this._viewUI.btn_chupai.visible;
-                } else {
-                    this._viewUI.btn_chupai.mouseEnabled = true;
-                    this._viewUI.img_chupai.visible = false;
-                }
+                //是否必出
                 if (this._guanShang == 1) {
                     //必出
                     this._viewUI.img_tishi.visible = false;
                     this._viewUI.btn_pass.mouseEnabled = !result;
                     this._viewUI.btn_chupai.visible = result;
-                    this._viewUI.img_chupai.visible = result;
+                    this._viewUI.img_chupai.visible = !this._viewUI.btn_chupai.mouseEnabled;
                     this._viewUI.btn_tishi.visible = result;
                     if (result) {
                         //有可以出的牌
@@ -1678,6 +1668,20 @@ module gamerpaodekuai.page {
                     //非必出
                     this._viewUI.btn_pass.mouseEnabled = true;
                     this._viewUI.img_pass.visible = false;
+                }
+                //选中的牌
+                let choose = this._paodekuaiMgr.promptBtn(this._chooseCards, this._playCardsConfig.card_type, this._playCardsConfig.card_len, this._playCardsConfig.max_val, false);
+                if (choose.length == 0) {   //不能出的牌
+                    for (let i = 0; i < this._paodekuaiMgr.allCards.length; i++) {
+                        let card = this._paodekuaiMgr.allCards[i];
+                        card.toggle = false;
+                    }
+                    this._chooseCards = [];
+                    this._viewUI.btn_chupai.mouseEnabled = false;
+                    this._viewUI.img_chupai.visible = this._viewUI.btn_chupai.visible;
+                } else {
+                    this._viewUI.btn_chupai.mouseEnabled = true;
+                    this._viewUI.img_chupai.visible = false;
                 }
                 //判断托管状态得信息
                 if (this._game.sceneObjectMgr.mainUnit.GetIdentity() == 1) {
@@ -2014,7 +2018,6 @@ module gamerpaodekuai.page {
 
         //重置数据
         private resetData(): void {
-            //不是房卡模式，才会去设置
             this._paodekuaiMgr.isReLogin = false;
             this._paodekuaiMgr.isReDealCard = false;
             this._winerPos = [];
