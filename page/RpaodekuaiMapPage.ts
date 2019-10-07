@@ -897,8 +897,16 @@ module gamerpaodekuai.page {
             }
         }
 
+        //气泡框提示
+        showQiPaoKuang(posIdx: number, skinStr: string): void {
+            this._viewUI["img_tishi" + posIdx].visible = true;
+            this._viewUI["img_tishi" + posIdx].img_info.skin = skinStr;
+            this._viewUI["img_tishi" + posIdx].ani1.play(0, false);
+            this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
+        }
+
         //黑桃三ui先手动画播放完
-        private htsViewAniCopmplete(posIdx: number): void {
+        private htsViewAniCopmplete(posIdx: number, typeFirst: number): void {
             //旋转，然后飞过去
             this._viewUI.view_hts.ani1.off(LEvent.COMPLETE, this, this.htsViewAniCopmplete);
             let rotation = this._xsPos[posIdx][2];
@@ -908,7 +916,6 @@ module gamerpaodekuai.page {
             Laya.Tween.to(this._viewUI.view_hts, { rotation: rotation }, 300, null, Handler.create(this, () => {
                 Laya.Tween.to(this._viewUI.view_hts, { top: this._xsPos[posIdx][0], centerX: this._xsPos[posIdx][1], scaleX: 0, scaleY: 0 }, 2000, null,
                     Handler.create(this, () => {
-                        console.log('++++++++++++++++++++++', posIdx);
                         this._viewUI["img_first" + posIdx].visible = true;
                         this._viewUI["img_first" + posIdx].ani1.play(0, false);
                         this._viewUI.view_hts.visible = false;
@@ -917,6 +924,9 @@ module gamerpaodekuai.page {
                         this._viewUI.view_hts.centerX = 0;
                         this._viewUI.view_hts.scale(1, 1);
                         this._viewUI.view_hts.rotation = 0;
+                        //提示气泡框
+                        let skinStr = Path_game_rpaodekuai.ui_paodekuai + (typeFirst == 1 ? "qipai/tu_yjxc.png" : "qipai/tu_htssc.png");
+                        this.showQiPaoKuang(posIdx, skinStr);
                     }));
             }))
         }
@@ -1081,10 +1091,7 @@ module gamerpaodekuai.page {
                             this._battleIndex = i;
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoPass;
                             let idx = info.SeatIndex;
-                            this._viewUI["img_tishi" + posIdx].visible = true;
-                            this._viewUI["img_tishi" + posIdx].img_info.skin = Path_game_rpaodekuai.ui_paodekuai + "qipai/tu_ybq.png";
-                            this._viewUI["img_tishi" + posIdx].ani1.play(0, false);
-                            this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
+                            this.showQiPaoKuang(posIdx, Path_game_rpaodekuai.ui_paodekuai + "qipai/tu_ybq.png");
                             this._viewUI["img_type" + posIdx].visible = false;
                             if (idx == mainIdx) {
                                 this._promptHitCount = 0;
@@ -1129,11 +1136,7 @@ module gamerpaodekuai.page {
                                 }
                                 this._viewUI.view_hts.visible = true;
                                 this._viewUI.view_hts.ani1.play(0, false);
-                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx])
-                                this._viewUI["img_tishi" + posIdx].visible = true;
-                                this._viewUI["img_tishi" + posIdx].img_info.skin = Path_game_rpaodekuai.ui_paodekuai + (typeFirst == 1 ? "qipai/tu_yjxc.png" : "qipai/tu_htssc.png");
-                                this._viewUI["img_tishi" + posIdx].ani1.play(0, false);
-                                this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
+                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx, typeFirst]);
                             }
                         }
                         break;
@@ -1151,10 +1154,8 @@ module gamerpaodekuai.page {
                                 let per = this._qiangCount * 2 + 1;
                                 this._viewUI.lab_per.text = per.toString();
                             }
-                            this._viewUI["img_tishi" + posIdx].visible = true;
-                            this._viewUI["img_tishi" + posIdx].img_info.skin = Path_game_rpaodekuai.ui_paodekuai + (isQiang ? "qipai/tu_qg.png" : "qipai/tu_bq1.png");
-                            this._viewUI["img_tishi" + posIdx].ani1.play(0, false);
-                            this._viewUI["img_tishi" + posIdx].ani1.on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["img_tishi" + posIdx], () => { }]);
+                            let skinStr = Path_game_rpaodekuai.ui_paodekuai + (isQiang ? "qipai/tu_qg.png" : "qipai/tu_bq1.png");
+                            this.showQiPaoKuang(posIdx, skinStr);
 
                             if (isQiang) {
                                 //底住加倍
