@@ -542,11 +542,11 @@ module gamerpaodekuai.page {
                     if (this._unitCounts == 3) {
                         this._viewUI.box_player2.x = this._viewUI.box_player3.x;
                         this._viewUI.box_player2.y = this._viewUI.box_player3.y;
-                        this._headPos = [[this._viewUI.box_player0.x, this._viewUI.box_player0.y], [this._viewUI.box_player1.x, this._viewUI.box_player1.y], [this._viewUI.box_player2.x, this._viewUI.box_player2.y]];
+                        this._headPos = [[this._viewUI.box_player0.x, this._viewUI.box_player0.y], [1158, this._viewUI.box_player1.y], [this._viewUI.box_player2.x, this._viewUI.box_player2.y]];
                         this._lightPointTemp = [[-10, 1], [194, 1], [18, 1]];
                         this._xsPos = [[510, -520, 180], [270, 540, 90], [250, -540, -90]];
                     } else if (this._unitCounts == 4) {
-                        this._headPos = [[this._viewUI.box_player0.x, this._viewUI.box_player0.y], [this._viewUI.box_player1.x, this._viewUI.box_player1.y], [this._viewUI.box_player2.x, this._viewUI.box_player2.y], [this._viewUI.box_player3.x, this._viewUI.box_player3.y]];
+                        this._headPos = [[this._viewUI.box_player0.x, this._viewUI.box_player0.y], [1158, this._viewUI.box_player1.y], [this._viewUI.box_player2.x, this._viewUI.box_player2.y], [this._viewUI.box_player3.x, this._viewUI.box_player3.y]];
                         this._lightPointTemp = [[-10, 1], [194, 1], [94, 0.5], [18, 1]];
                         this._xsPos = [[510, -520, 180], [270, 540, 90], [100, -90, 0], [250, -540, -90]];
                     }
@@ -607,7 +607,7 @@ module gamerpaodekuai.page {
             let curPos = isShow ? -185 : 5;
             let targetPos = isShow ? 5 : -185;
             this._viewUI.img_roomRule.x = curPos;
-            Laya.Tween.to(this._viewUI.img_roomRule, { x: targetPos }, 600, null, Handler.create(this, () => {
+            Laya.Tween.to(this._viewUI.img_roomRule, { x: targetPos }, 300, null, Handler.create(this, () => {
                 this._roomRuleIsTween = false;
             }));
         }
