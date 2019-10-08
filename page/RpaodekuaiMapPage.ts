@@ -893,10 +893,6 @@ module gamerpaodekuai.page {
         update(diff: number) {
             super.update(diff);
             this._toupiaoMgr && this._toupiaoMgr.update(diff);
-            let cur_time: number = Laya.timer.currTimer;
-            if (this._nextUpdateTime > 0 && this._nextUpdateTime > cur_time) return;
-            this._nextUpdateTime = cur_time + 500;
-            this.clipTween();
         }
 
         //操作倒计时
@@ -1875,7 +1871,7 @@ module gamerpaodekuai.page {
             }
             this._clipList.push(valueClip);
             Laya.Tween.clearAll(valueClip);
-            this.clipTween();
+            this.clipTween(isZhaDan);
             //播放赢钱动画
             if (value > 0) {
                 this._viewUI["view_yq" + index].visible = true;
@@ -1885,10 +1881,11 @@ module gamerpaodekuai.page {
         }
 
         //飘字动画
-        private clipTween(): void {
+        private clipTween(isZhaDan): void {
             if (this._clipList.length != 0) {
                 let clip: PaodekuaiClip = this._clipList.shift();
-                Laya.Tween.to(clip, { y: clip.y - 80 }, 1000, null, Handler.create(this, () => {
+                let y = isZhaDan ? clip.y - 90 : clip.y - 70;
+                Laya.Tween.to(clip, { y: y }, 1000, null, Handler.create(this, () => {
                     Laya.timer.once(2000, this, () => {
                         Laya.Tween.to(clip, { alpha: 0 }, 1000, () => {
                             clip.removeSelf();
