@@ -35,7 +35,9 @@ module gamerpaodekuai.page {
         protected onBtnTweenEnd(e: LEvent, target: any) {
             switch (target) {
                 case this._viewUI.btn_create_room:
-                    this._game.uiRoot.general.open(DatingPageDef.PAGE_PDK_CREATE_CARDROOM);
+                    this._game.uiRoot.general.open(DatingPageDef.PAGE_PDK_CREATE_CARDROOM, (page: gamedating.page.CreateCardRoomBase) => {
+						page.game_id = "rpaodekuai";
+					});
                     this.close();
                     break;
                 case this._viewUI.btn_tc:
