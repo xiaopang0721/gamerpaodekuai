@@ -131,6 +131,7 @@ module gamerpaodekuai.page {
                     if (this._data.isQG) {
                         this.img_tp.visible = true;
                         this.img_qgsb.visible = true;
+                        this.lab_double.visible = true;
                     }
                 }
             } else {
@@ -148,8 +149,10 @@ module gamerpaodekuai.page {
                 this.lab_bomb.text = this._data.bombNum;
             }
             this.lab_point.text = this._data.point ? this._data.point : "0";
+            this.img_tp.x = this.lab_point.x + this.lab_point.width - 3;
             this.lbl_totalpoint.text = String(this._data.totalPoint);
             this.lab_name.color = this.lab_chip.color = this.lab_multiple.color = this._data.isMain ? "#ffc32c" : TeaStyle.COLOR_WHITE;
+            this.lab_double.centerX = this.lab_multiple.centerX + this.lab_multiple.width;
             this.lab_point.color = parseFloat(this._data.point) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
             this.lbl_totalpoint.color = parseFloat(this._data.totalPoint) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
         }
