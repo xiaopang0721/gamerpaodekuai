@@ -889,9 +889,14 @@ module gamerpaodekuai.page {
             this._countDown = mapinfo.GetCountDown();
         }
 
+        private _nextUpdateTime:number;
         update(diff: number) {
             super.update(diff);
             this._toupiaoMgr && this._toupiaoMgr.update(diff);
+            let cur_time: number = Laya.timer.currTimer;
+            if (this._nextUpdateTime > 0 && this._nextUpdateTime > cur_time) return;
+            this._nextUpdateTime = cur_time + 500;
+            this.clipTween();
         }
 
         //操作倒计时
@@ -1859,12 +1864,24 @@ module gamerpaodekuai.page {
             valueClip.pos(posX, posY);
             this._clipList.push(valueClip);
             Laya.Tween.clearAll(valueClip);
-            Laya.Tween.to(valueClip, { y: posY - 80 }, 1000);
+            this.clipTween();
             //播放赢钱动画
             if (value > 0) {
                 this._viewUI["view_yq" + index].visible = true;
                 this._viewUI["view_yq" + index].ani1.play(0, false);
                 this._viewUI["view_yq" + index].on(LEvent.COMPLETE, this, this.onUIAniOver, [this._viewUI["view_yq" + index], () => { }]);
+            }
+        }
+
+        //飘字动画
+        private clipTween(): void {
+            if (this._clipList.length != 0) {
+                let clip: PaodekuaiClip = this._clipList.shift();
+                Laya.Tween.to(clip, { y: clip.y - 80 }, 1000, null, Handler.create(this, () => {
+                    clip.removeSelf();
+                    clip.destroy();
+                    clip = null;
+                }));
             }
         }
 
