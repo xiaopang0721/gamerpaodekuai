@@ -473,7 +473,7 @@ module gamerpaodekuai.page {
                         this.playTween(this._viewUI["view_player" + index].qifu_type, qifu_index);
                     }
                     //时间戳变化 才加上祈福标志
-                    if (unit.GetQiFuEndTime() > this._game.sync.serverTimeBys) {
+                    if (this._game.datingGame.getIsHaveQiFu(unit)) {
                         if (qifu_index && posIdx == qifu_index) {
                             Laya.timer.once(2500, this, () => {
                                 this._viewUI["view_player" + index].img_qifu.visible = true;
@@ -617,14 +617,14 @@ module gamerpaodekuai.page {
                     money = mPlayer.playerInfo.money;
                     this._viewUI.view_player0.txt_name.text = getMainPlayerName(mPlayer.playerInfo.nickname);
                     this._viewUI.view_player0.img_head.skin = this._game.datingGame.getHeadUrl(mPlayer.playerInfo.headimg, 2);
-                    this._viewUI.view_player0.img_qifu.visible = mPlayer.playerInfo.qifu_endtime > this._game.sync.serverTimeBys;
+                    this._viewUI.view_player0.img_qifu.visible = this._game.datingGame.getIsHaveQiFu(mPlayer);
                     //头像框
                     this._viewUI.view_player0.img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(mPlayer.GetHeadKuangImg(), 2);
                 } else {
                     money = unitOffline.GetMoney();
                     this._viewUI.view_player0.txt_name.text = getMainPlayerName(unitOffline.GetName());
                     this._viewUI.view_player0.img_head.skin = this._game.datingGame.getHeadUrl(unitOffline.GetHeadImg(), 2);
-                    this._viewUI.view_player0.img_qifu.visible = unitOffline.GetQiFuEndTime() > this._game.sync.serverTimeBys;
+                    this._viewUI.view_player0.img_qifu.visible = this._game.datingGame.getIsHaveQiFu(unitOffline);
                     //头像框
                     this._viewUI.view_player0.img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(unitOffline.GetHeadKuangImg(), 2);
                 }
