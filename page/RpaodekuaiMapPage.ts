@@ -974,7 +974,7 @@ module gamerpaodekuai.page {
                 this._viewUI["img_first" + i].visible = false;
             }
             Laya.Tween.to(this._viewUI.view_hts, { rotation: rotation }, 300, null, Handler.create(this, () => {
-                Laya.Tween.to(this._viewUI.view_hts, { top: this._xsPos[posIdx][0], centerX: this._xsPos[posIdx][1], scaleX: 0, scaleY: 0 }, 2000, null,
+                Laya.Tween.to(this._viewUI.view_hts, { top: this._xsPos[posIdx][0], centerX: this._xsPos[posIdx][1], scaleX: 0, scaleY: 0 }, 700, null,
                     Handler.create(this, () => {
                         this._viewUI["img_first" + posIdx].visible = true;
                         this._viewUI["img_first" + posIdx].ani1.play(0, false);
@@ -998,7 +998,7 @@ module gamerpaodekuai.page {
             for (let i = 0; i < 4; i++) {
                 this._viewUI["img_first" + i].visible = false;
             }
-            Laya.Tween.to(this._viewUI.view_xs, { top: this._xsPos[qiang_pos][0], centerX: this._xsPos[qiang_pos][1], scaleX: 0, scaleY: 0 }, 1000, null,
+            Laya.Tween.to(this._viewUI.view_xs, { top: this._xsPos[qiang_pos][0], centerX: this._xsPos[qiang_pos][1], scaleX: 0, scaleY: 0 }, 700, null,
                 Handler.create(this, () => {
                     this._viewUI["img_first" + qiang_pos].visible = true;
                     this._viewUI["img_first" + qiang_pos].ani1.play(0, false);
