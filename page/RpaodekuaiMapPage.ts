@@ -447,20 +447,12 @@ module gamerpaodekuai.page {
                             //托管中
                             this._viewUI["view_player" + index].img_tuoguan.visible = true;
                             if (posIdx == idx) {
-                                this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg1.png";
-                                this._viewUI.box_tg.visible = true;
-                                this._viewUI.btn_qxtg.visible = true;
-                                this._viewUI.tg_info.visible = false;
-                                // this._paodekuaiMgr.setTG(true);
+                                this.updateTGUI();
                             }
                         } else if (unit.GetIdentity() == 0) {
                             this._viewUI["view_player" + index].img_tuoguan.visible = false;
                             if (posIdx == idx) {
-                                this._viewUI.btn_tuoguan.skin = Path_game_rpaodekuai.ui_paodekuai + "btn_tg0.png";
-                                this._viewUI.box_tg.visible = false;
-                                this._viewUI.btn_qxtg.visible = false;
-                                this._viewUI.tg_info.visible = false;
-                                // this._paodekuaiMgr.setTG(false);
+                                this.updateTGUI();
                             }
                         }
                     }
@@ -489,6 +481,17 @@ module gamerpaodekuai.page {
                     }
                 }
             }
+        }
+
+        //更新主玩家托管ui
+        updateTGUI(): void {
+            let mainUnit = this._game.sceneObjectMgr.mainUnit;
+            if (!mainUnit) return;
+            let identity = mainUnit.GetIdentity();
+            this._viewUI.btn_tuoguan.skin = identity == 1 ? Path_game_rpaodekuai.ui_paodekuai + "btn_tg1.png" : Path_game_rpaodekuai.ui_paodekuai + "btn_tg0.png";
+            this._viewUI.box_tg.visible = identity == 1 ? true : false;
+            this._viewUI.btn_qxtg.visible = identity == 1 ? true : false;
+            this._viewUI.tg_info.visible = false;
         }
 
         private _diff: number = 500;
@@ -766,6 +769,7 @@ module gamerpaodekuai.page {
             }
             if (state == MAP_STATUS.MAP_STATE_PLAYING) {
                 this._viewUI.btn_tuoguan.visible = true;
+                this.updateTGUI();
                 if (betPos == mainIdx) {
                     this._viewUI.box_btn.visible = true;
                     this.CheckBtnStatus(mainIdx);
@@ -777,10 +781,6 @@ module gamerpaodekuai.page {
                 let posIdx = (betPos - mainIdx + this._unitCounts) % this._unitCounts;
                 this._viewUI["img_tishi" + posIdx].visible = false;
                 this._viewUI["img_type" + posIdx].visible = false;
-                //如果有炸弹现结的飘字
-                // if (this._clipList.length > 0) {
-                //     Laya.timer.once(2000, this, this.clearClip);
-                // }
                 //轮到谁的指示灯
                 this._viewUI.img_point.visible = true;
                 this._viewUI.img_point.rotation = this._lightPointTemp[posIdx][0];
@@ -918,11 +918,10 @@ module gamerpaodekuai.page {
             let posIdx = (betPos - this._mainIdx + this._unitCounts) % this._unitCounts;
             //时钟的位置
             let temp = []
-            // if (this._guanShang == 0) {
             if (this._unitCounts == 4) {
-                temp = [[640, 405], [1111, 223], [626, 59], [168, 223]];
+                temp = [[640, 425], [1041, 293], [700, 110], [249, 297]];
             } else if (this._unitCounts == 3) {
-                temp = [[640, 405], [1111, 223], [168, 223]];
+                temp = [[640, 425], [1041, 293], [249, 297]];
             }
             this._viewUI.view_time.x = temp[posIdx][0];
             this._viewUI.view_time.y = temp[posIdx][1];
@@ -952,7 +951,7 @@ module gamerpaodekuai.page {
         }
 
         //黑桃三ui先手动画播放完
-        private htsViewAniCopmplete(posIdx: number, typeFirst: number): void {
+        private htsViewAniCopmplete(posIdx: number): void {
             //旋转，然后飞过去
             this._viewUI.view_hts.ani1.off(LEvent.COMPLETE, this, this.htsViewAniCopmplete);
             let rotation = this._xsPos[posIdx][2];
@@ -971,7 +970,7 @@ module gamerpaodekuai.page {
                         this._viewUI.view_hts.scale(1, 1);
                         this._viewUI.view_hts.rotation = 0;
                         //提示气泡框
-                        let skinStr = Path_game_rpaodekuai.ui_paodekuai + (typeFirst == 1 ? "qipai/tu_yjxc.png" : "qipai/tu_htssc.png");
+                        let skinStr = Path_game_rpaodekuai.ui_paodekuai + (this._typeFirst == 1 ? "qipai/tu_yjxc.png" : "qipai/tu_htssc.png");
                         this.showQiPaoKuang(posIdx, skinStr);
                     }));
             }))
@@ -1182,7 +1181,7 @@ module gamerpaodekuai.page {
                                 }
                                 this._viewUI.view_hts.visible = true;
                                 this._viewUI.view_hts.ani1.play(0, false);
-                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx, typeFirst]);
+                                this._viewUI.view_hts.ani1.on(LEvent.COMPLETE, this, this.htsViewAniCopmplete, [posIdx]);
                             }
                         }
                         break;
@@ -1647,6 +1646,8 @@ module gamerpaodekuai.page {
             this._viewUI.img_tishi.centerX = -1;
             this._viewUI.btn_pass.centerX = -187;
             this._viewUI.img_pass.centerX = -187;
+            this._viewUI.btn_chupai.centerX = 186;
+            this._viewUI.img_chupai.centerX = 186;
             if (this._playCardsConfig.player == mainIdx || this._playCardsConfig.card_type == 0) {  //有发牌权，不需要定义特别类别
                 this._viewUI.img_pass.visible = true;
                 this._viewUI.btn_pass.mouseEnabled = false;
@@ -1672,8 +1673,10 @@ module gamerpaodekuai.page {
                 if (this._guanShang == 1) {
                     this._viewUI.btn_pass.visible = false;
                     this._viewUI.img_pass.visible = false;
-                    this._viewUI.btn_tishi.centerX = this._viewUI.btn_pass.centerX;
-                    this._viewUI.img_tishi.centerX = this._viewUI.img_pass.centerX;
+                    this._viewUI.btn_tishi.centerX = -137;
+                    this._viewUI.img_tishi.centerX = -137;
+                    this._viewUI.btn_chupai.centerX = 136;
+                    this._viewUI.img_chupai.centerX = 136;
                 }
             } else {
                 //手里的牌
@@ -1693,8 +1696,10 @@ module gamerpaodekuai.page {
                         //有可以出的牌
                         this._viewUI.btn_pass.visible = false;
                         this._viewUI.img_pass.visible = false;
-                        this._viewUI.btn_tishi.centerX = this._viewUI.btn_pass.centerX;
-                        this._viewUI.img_tishi.centerX = this._viewUI.img_pass.centerX;
+                        this._viewUI.btn_tishi.centerX = -137;
+                        this._viewUI.img_tishi.centerX = -137;
+                        this._viewUI.btn_chupai.centerX = 136;
+                        this._viewUI.img_chupai.centerX = 136;
                     } else {
                         //没有可以出的牌
                         this._viewUI.btn_pass.visible = true;
