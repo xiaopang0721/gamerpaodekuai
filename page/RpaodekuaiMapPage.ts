@@ -778,9 +778,9 @@ module gamerpaodekuai.page {
                 this._viewUI["img_tishi" + posIdx].visible = false;
                 this._viewUI["img_type" + posIdx].visible = false;
                 //如果有炸弹现结的飘字
-                if (this._clipList.length > 0) {
-                    Laya.timer.once(2000, this, this.clearClip);
-                }
+                // if (this._clipList.length > 0) {
+                //     Laya.timer.once(2000, this, this.clearClip);
+                // }
                 //轮到谁的指示灯
                 this._viewUI.img_point.visible = true;
                 this._viewUI.img_point.rotation = this._lightPointTemp[posIdx][0];
@@ -889,7 +889,7 @@ module gamerpaodekuai.page {
             this._countDown = mapinfo.GetCountDown();
         }
 
-        private _nextUpdateTime:number;
+        private _nextUpdateTime: number;
         update(diff: number) {
             super.update(diff);
             this._toupiaoMgr && this._toupiaoMgr.update(diff);
@@ -1301,7 +1301,7 @@ module gamerpaodekuai.page {
                             if (info.SeatIndex == mainIdx) {
                                 this._moneyChange = info.SettleVal;
                             }
-                            this.addMoneyClip(info.SettleVal, info.SeatIndex);
+                            this.addMoneyClip(info.SettleVal, info.SeatIndex, false);
                             //存下结算数据
                             this._pointTemp.push(info.SeatIndex);
                             this._pointTemp.push(info.SettleVal);
@@ -1312,7 +1312,7 @@ module gamerpaodekuai.page {
                         if (this._battleIndex < i) {
                             this._battleIndex = i
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoSpecial;
-                            this.addMoneyClip(info.SpecialVal, info.SeatIndex);
+                            this.addMoneyClip(info.SpecialVal, info.SeatIndex, true);
                             //存下结算数据
                             this._pointBomb.push(info.SeatIndex);
                             this._pointBomb.push(info.SpecialVal);
@@ -1846,7 +1846,7 @@ module gamerpaodekuai.page {
 
 
         //金币变化 飘字clip
-        public addMoneyClip(value: number, pos: number): void {
+        public addMoneyClip(value: number, pos: number, isZhaDan: boolean = false): void {
             let mainUnit = this._game.sceneObjectMgr.mainUnit;
             if (!mainUnit) return;
             let idx = mainUnit.GetIndex();
@@ -1862,6 +1862,12 @@ module gamerpaodekuai.page {
             let deep = this._viewUI.img_menu.parent.getChildIndex(this._viewUI.img_menu);
             if (!valueClip.parent) this._viewUI.box_view.addChildAt(valueClip, deep);
             valueClip.pos(posX, posY);
+            if (isZhaDan) {
+                let imgZhaDan: LImage = new LImage(Path_game_rpaodekuai.ui_paodekuai + "zhadan.png");
+                imgZhaDan.y = -imgZhaDan.height;
+                imgZhaDan.x = 0;
+                valueClip.addChild(imgZhaDan);
+            }
             this._clipList.push(valueClip);
             Laya.Tween.clearAll(valueClip);
             this.clipTween();
@@ -1878,9 +1884,13 @@ module gamerpaodekuai.page {
             if (this._clipList.length != 0) {
                 let clip: PaodekuaiClip = this._clipList.shift();
                 Laya.Tween.to(clip, { y: clip.y - 80 }, 1000, null, Handler.create(this, () => {
-                    clip.removeSelf();
-                    clip.destroy();
-                    clip = null;
+                    Laya.timer.once(2000, this, () => {
+                        Laya.Tween.to(clip, { alpha: 0 }, 1000, () => {
+                            clip.removeSelf();
+                            clip.destroy();
+                            clip = null;
+                        })
+                    });
                 }));
             }
         }
