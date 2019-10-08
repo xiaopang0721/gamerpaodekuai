@@ -1936,12 +1936,11 @@ module gamerpaodekuai.page {
         private qifuFly(dataSource: any): void {
             if (!dataSource) return;
             let dataInfo = dataSource;
-            this._game.qifuMgr.showFlayAni(this._viewUI.view_player0.img_head, this._viewUI, dataSource, (dataInfo) => {
+            this._game.qifuMgr.showFlayAni(this._viewUI.view_player0.img_head, this._viewUI, dataSource, Handler.create(this, () => {
                 //相对应的玩家精灵做出反应
-                let nameStrInfo = ["xs", "px", "gsy", "gg", "cs", "tdg"];
-                this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_touxiang + "f_{0}2.png", nameStrInfo[dataInfo.qf_id - 1]);
+                this._qifuTypeImgUrl = StringU.substitute(PathGameTongyong.ui_tongyong_touxiang + "f_{0}2.png", this._nameStrInfo[dataInfo.qf_id - 1]);
                 this.onUpdateUnit(dataInfo.qifu_index);
-            });
+            }));
         }
 
         protected onOptHandler(optcode: number, msg: any) {
