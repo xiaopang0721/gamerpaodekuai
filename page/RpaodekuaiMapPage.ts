@@ -435,49 +435,50 @@ module gamerpaodekuai.page {
             for (let index = 0; index < this._unitCounts; index++) {
                 let posIdx = this.GetSeatFromUiPos(index);
                 let unit = this._game.sceneObjectMgr.getUnitByIdx(posIdx)
-                this._viewUI["view_player" + index].visible = unit;
+                let viewPlayer: ui.nqp.game_ui.paodekuai.component.TouXiangUI = this._viewUI["view_player" + index];
+                viewPlayer.visible = unit;
                 if (unit) {
                     let name = getMainPlayerName(unit.GetName());
-                    this._viewUI["view_player" + index].txt_name.text = name;
+                    viewPlayer.txt_name.text = name;
                     let money = EnumToString.getPointBackNum(unit.GetMoney(), 2);
-                    this._viewUI["view_player" + index].txt_money.text = money;
+                    viewPlayer.txt_money.text = money.toString();
                     if (this._mapInfo.GetMapState() == MAP_STATUS.MAP_STATE_PLAYING) {
                         //托管状态
                         if (unit.GetIdentity() == 1) {
                             //托管中
-                            this._viewUI["view_player" + index].img_tuoguan.visible = true;
+                            viewPlayer.img_tuoguan.visible = true;
                             if (posIdx == idx) {
                                 this.updateTGUI();
                             }
                         } else if (unit.GetIdentity() == 0) {
-                            this._viewUI["view_player" + index].img_tuoguan.visible = false;
+                            viewPlayer.img_tuoguan.visible = false;
                             if (posIdx == idx) {
                                 this.updateTGUI();
                             }
                         }
                     }
                     //头像框
-                    this._viewUI["view_player" + index].img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(unit.GetHeadKuangImg(), 2);
+                    viewPlayer.img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(unit.GetHeadKuangImg(), 2);
                     //祈福成功 头像上就有动画
                     if (qifu_index && posIdx == qifu_index) {
-                        this._viewUI["view_player" + index].qifu_type.visible = true;
-                        this._viewUI["view_player" + index].qifu_type.skin = this._qifuTypeImgUrl;
-                        this.playTween(this._viewUI["view_player" + index].qifu_type, qifu_index);
+                        viewPlayer.qifu_type.visible = true;
+                        viewPlayer.qifu_type.skin = this._qifuTypeImgUrl;
+                        this.playTween(viewPlayer.qifu_type, qifu_index);
                     }
                     //时间戳变化 才加上祈福标志
                     if (this._game.datingGame.getIsHaveQiFu(unit)) {
                         if (qifu_index && posIdx == qifu_index) {
                             Laya.timer.once(2500, this, () => {
-                                this._viewUI["view_player" + index].img_qifu.visible = true;
-                                this._viewUI["view_player" + index].img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
+                                viewPlayer.img_qifu.visible = true;
+                                viewPlayer.img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
                             })
                         } else {
-                            this._viewUI["view_player" + index].img_qifu.visible = true;
-                            this._viewUI["view_player" + index].img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
+                            viewPlayer.img_qifu.visible = true;
+                            viewPlayer.img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
                         }
                     } else {
-                        this._viewUI["view_player" + index].img_qifu.visible = false;
-                        this._viewUI["view_player" + index].img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
+                        viewPlayer.img_qifu.visible = false;
+                        viewPlayer.img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
                     }
                 }
             }
@@ -1568,23 +1569,63 @@ module gamerpaodekuai.page {
             }
             this._chooseCards = [];
             let mainIdx = mainUnit.GetIndex();
-            if (this._playCardsConfig.card_type == 0 || this._playCardsConfig.player == mainIdx) {
+            if (this._playCardsConfig.card_type == 0 || this._playCardsConfig.player == mainIdx) {//有出牌权
                 if (this._paodekuaiMgr.allCards.length == 0) return;
+                //要出的牌
                 let val = this._paodekuaiMgr.allCards[this._paodekuaiMgr.allCards.length - 1].GetCardVal();
                 let count: number = 0;
-                for (let i = 0; i < this._paodekuaiMgr.allCards.length; i++) {
-                    if (val == this._paodekuaiMgr.allCards[i].GetCardVal()) {
+                //可能需要携带的牌
+                let val1;
+                let val1Count: number = 0;
+                for (let i = this._paodekuaiMgr.allCards.length - 1; i > 0; i--) {
+                    let card = this._paodekuaiMgr.allCards[i]
+                    if (val == card.GetCardVal()) {
                         count++;
+                        this._chooseCards.push(card);
                     }
                 }
-                for (let i = 0; i < count; i++) {
-                    let card = this._paodekuaiMgr.allCards[this._paodekuaiMgr.allCards.length - (1 + i)]
+                //3根还要携带东西，寻找牌组中倒数第二大的牌
+                if (count == 3) {
+                    //找所有单张
+                    let danTemp = this._paodekuaiMgr.promptBtn(this._paodekuaiMgr.allCards, CARD_TYPE.CARDS_TYPE_DAN, this._paodekuaiMgr.allCards.length, 1, true);
+                    //找所有对子
+                    let duiziTmep = this._paodekuaiMgr.promptBtn(this._paodekuaiMgr.allCards, CARD_TYPE.CARDS_TYPE_DUI, this._paodekuaiMgr.allCards.length, 1, true);
+                    if (danTemp.length < 0 && duiziTmep.length > 0) {
+                        //没单
+                        this._chooseCards.push(duiziTmep[0][0]);
+                        this._chooseCards.push(duiziTmep[0][1]);
+                    }
+                    if (duiziTmep.length < 0 && danTemp.length > 0) {
+                        //没对子
+                        this._chooseCards.push(danTemp[0][0]);
+                        this._chooseCards.push(danTemp[1][0]);
+                    } else {
+                        if (danTemp.length > 0 && duiziTmep.length > 0) {
+                            //有单有对子
+                            if (danTemp[0][0].GetCardVal() > duiziTmep[0][0].GetCardVal()) {
+                                //单大于对子 拿对子
+                                this._chooseCards.push(duiziTmep[0][0]);
+                                this._chooseCards.push(duiziTmep[0][1]);
+                            } else {
+                                //对子大于单 拿两张单
+                                this._chooseCards.push(danTemp[0][0]);
+                                this._chooseCards.push(danTemp[1][0]);
+                            }
+                        } else {
+                            //极端情况 没单没对
+                        }
+                    }
+
+                }
+                //推匹配好的牌
+                for (let i = 0; i < this._chooseCards.length; i++) {
+                    let card = this._chooseCards[i];
                     if (!card.toggle) {
                         card.toggle = true;
-                        this._chooseCards.push(card);
-                        this._paodekuaiMgr.SortCards(this._chooseCards);
                     }
                 }
+                //排序
+                this._paodekuaiMgr.SortCards(this._chooseCards);
             } else {
                 let allcards = this._paodekuaiMgr.promptBtn(this._paodekuaiMgr.allCards, this._playCardsConfig.card_type, this._playCardsConfig.card_len, this._playCardsConfig.max_val, false);
                 if (allcards.length > 0) {
@@ -1884,7 +1925,7 @@ module gamerpaodekuai.page {
         private clipTween(isZhaDan): void {
             if (this._clipList.length != 0) {
                 let clip: PaodekuaiClip = this._clipList.shift();
-                let y = isZhaDan ? clip.y - 90 : clip.y - 70;
+                let y = isZhaDan ? clip.y - 85 : clip.y - 65;
                 Laya.Tween.to(clip, { y: y }, 1000, null, Handler.create(this, () => {
                     Laya.timer.once(2000, this, () => {
                         Laya.Tween.to(clip, { alpha: 0 }, 1000, () => {
