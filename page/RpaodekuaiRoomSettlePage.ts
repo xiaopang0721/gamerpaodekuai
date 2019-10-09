@@ -24,7 +24,7 @@ module gamerpaodekuai.page {
         // 页面打开时执行函数
         protected onOpen(): void {
             super.onOpen();
-            this._viewUI.list_settle.itemRender = this.createChildren("game_ui.tongyong.JieSuanRender2UI", ListRecordItem);
+            this._viewUI.list_settle.itemRender = this.createChildren("game_ui.paodekuai.component.JieSuanRender2_pdkUI", ListRecordItem);
             this._viewUI.list_settle.renderHandler = new Handler(this, this.renderHandler);
             this._viewUI.list_settle.dataSource = this.dataSource[2];
             this._isGameEnd = this.dataSource[3] >= MAP_STATUS.MAP_STATE_END;
