@@ -465,7 +465,7 @@ module gamerpaodekuai.page {
                         }
                     }
                     //头像框
-                    this._viewUI["view_player" + index].img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(unit.GetHeadKuangImg(), 2);
+                    this._viewUI["view_player" + index].img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unit.GetHeadKuangImg(), 2);
                     //祈福成功 头像上就有动画
                     if (qifu_index && posIdx == qifu_index) {
                         this._viewUI["view_player" + index].qifu_type.visible = true;
@@ -473,19 +473,19 @@ module gamerpaodekuai.page {
                         this.playTween(this._viewUI["view_player" + index].qifu_type, qifu_index);
                     }
                     //时间戳变化 才加上祈福标志
-                    if (this._game.datingGame.getIsHaveQiFu(unit)) {
+                    if (TongyongUtil.getIsHaveQiFu(unit, this._game.sync.serverTimeBys)) {
                         if (qifu_index && posIdx == qifu_index) {
                             Laya.timer.once(2500, this, () => {
                                 this._viewUI["view_player" + index].img_qifu.visible = true;
-                                this._viewUI["view_player" + index].img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
+                                this._viewUI["view_player" + index].img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
                         } else {
                             this._viewUI["view_player" + index].img_qifu.visible = true;
-                            this._viewUI["view_player" + index].img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
+                            this._viewUI["view_player" + index].img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                         }
                     } else {
                         this._viewUI["view_player" + index].img_qifu.visible = false;
-                        this._viewUI["view_player" + index].img_head.skin = this._game.datingGame.getHeadUrl(unit.GetHeadImg(), 2);
+                        this._viewUI["view_player" + index].img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                     }
                 }
             }
@@ -616,17 +616,17 @@ module gamerpaodekuai.page {
                 if (mPlayer) {
                     money = mPlayer.playerInfo.money;
                     this._viewUI.view_player0.txt_name.text = getMainPlayerName(mPlayer.playerInfo.nickname);
-                    this._viewUI.view_player0.img_head.skin = this._game.datingGame.getHeadUrl(mPlayer.playerInfo.headimg, 2);
-                    this._viewUI.view_player0.img_qifu.visible = this._game.datingGame.getIsHaveQiFu(mPlayer);
+                    this._viewUI.view_player0.img_head.skin = TongyongUtil.getHeadUrl(mPlayer.playerInfo.headimg, 2);
+                    this._viewUI.view_player0.img_qifu.visible = TongyongUtil.getIsHaveQiFu(mPlayer, this._game.sync.serverTimeBys);
                     //头像框
-                    this._viewUI.view_player0.img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(mPlayer.GetHeadKuangImg(), 2);
+                    this._viewUI.view_player0.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mPlayer.GetHeadKuangImg(), 2);
                 } else {
                     money = unitOffline.GetMoney();
                     this._viewUI.view_player0.txt_name.text = getMainPlayerName(unitOffline.GetName());
-                    this._viewUI.view_player0.img_head.skin = this._game.datingGame.getHeadUrl(unitOffline.GetHeadImg(), 2);
-                    this._viewUI.view_player0.img_qifu.visible = this._game.datingGame.getIsHaveQiFu(unitOffline);
+                    this._viewUI.view_player0.img_head.skin = TongyongUtil.getHeadUrl(unitOffline.GetHeadImg(), 2);
+                    this._viewUI.view_player0.img_qifu.visible = TongyongUtil.getIsHaveQiFu(unitOffline, this._game.sync.serverTimeBys);
                     //头像框
-                    this._viewUI.view_player0.img_txk.skin = this._game.datingGame.getTouXiangKuangUrl(unitOffline.GetHeadKuangImg(), 2);
+                    this._viewUI.view_player0.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unitOffline.GetHeadKuangImg(), 2);
                 }
                 money = EnumToString.getPointBackNum(money, 2);
                 this._viewUI.view_player0.txt_money.text = money.toString();
