@@ -890,7 +890,6 @@ module gamerpaodekuai.page {
             this._countDown = mapinfo.GetCountDown();
         }
 
-        private _nextUpdateTime: number;
         update(diff: number) {
             super.update(diff);
             this._toupiaoMgr && this._toupiaoMgr.update(diff);
@@ -2064,58 +2063,6 @@ module gamerpaodekuai.page {
                     }
                 }
             }
-        }
-
-        //发起投降显示
-        private _isShowTX: boolean = false;
-        showViewTX(): void {
-            this._isShowTX = true;
-            this._viewUI.view_tp.right = -335;
-            this.initViewTX();
-            Laya.Tween.clearAll(this._viewUI.view_tp);
-            Laya.Tween.to(this._viewUI.view_tp, { right: 10 }, 800, null);
-        }
-        //发起投降UI排列
-        initViewTX(): void {
-            this._viewUI.view_tp.btn_ok.visible = true;
-            this._viewUI.view_tp.btn_refuse.visible = true;
-            this._viewUI.view_tp.img_bg.height = 142;
-            //当前局有几人
-            for (let i = 1; i < 6; i++) {
-                this._viewUI.view_tp["clip_" + i].index = 2;
-                this._viewUI.view_tp["clip_" + i].width = 56;
-                this._viewUI.view_tp["clip_" + i].height = 19;
-                this._viewUI.view_tp["clip_" + i].x = 140 + (i - 1) * 60;
-                this._viewUI.view_tp["clip_" + i].visible = true;
-            }
-            switch (this._unitCounts) {
-                case 3:
-                    this._viewUI.view_tp.clip_5.visible = false;
-                    this._viewUI.view_tp.clip_4.visible = false;
-                    for (let i = 1; i < 4; i++) {
-                        this._viewUI.view_tp["clip_" + i].x = 160 + (i - 1) * 95;
-                        this._viewUI.view_tp["clip_" + i].width = 85;
-                    }
-                    break
-                case 4:
-                    this._viewUI.view_tp.clip_5.visible = false;
-                    for (let i = 1; i < 5; i++) {
-                        this._viewUI.view_tp["clip_" + i].x = 142 + (i - 1) * 77;
-                        this._viewUI.view_tp["clip_" + i].width = 70;
-                    }
-                    break
-                case 5:
-
-                    break
-            }
-
-        }
-        //发起投降隐藏
-        hideViewTX(): void {
-            this._isShowTX = false;
-            this._viewUI.view_tp.right = 10;
-            Laya.Tween.clearAll(this._viewUI.view_tp);
-            Laya.Tween.to(this._viewUI.view_tp, { right: -335 }, 800, null);
         }
 
         //重置数据

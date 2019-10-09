@@ -104,7 +104,7 @@ module gamerpaodekuai.page {
         }
     }
 
-    class ListRecordItem extends ui.nqp.game_ui.tongyong.JieSuanRender2UI {
+    class ListRecordItem extends ui.nqp.game_ui.paodekuai.component.JieSuanRender2_pdkUI {
         private _game: Game;
         private _data: any;
         setData(game: Game, data: any) {
