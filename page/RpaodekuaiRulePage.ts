@@ -3,8 +3,8 @@
 */
 module gamerpaodekuai.page {
 	const enum TYPE_INDEX {
-		TYPE_TYPE = 0,
-		TYPE_WANFA = 1,
+		TYPE_WANFA = 0,
+		TYPE_TYPE = 1,
 		TYPE_JIESUAN = 2,
 	}
 
@@ -35,7 +35,7 @@ module gamerpaodekuai.page {
 			if (this.dataSource) {
 				this._viewUI.btn_tab.selectedIndex = this.dataSource;
 			} else {
-				this._viewUI.btn_tab.selectedIndex = TYPE_INDEX.TYPE_TYPE;
+				this._viewUI.btn_tab.selectedIndex = TYPE_INDEX.TYPE_WANFA;
 			}
 			this._viewUI.panel_type.vScrollBarSkin = "";
 			this._viewUI.panel_type.vScrollBar.autoHide = true;
