@@ -102,6 +102,7 @@ module gamerpaodekuai.data {
 					this._showcardCount++;
 					if (this._showcardCount == this.GetPlayerNumFromSeat()) {
 						this._roundCount++;//下一回合计数
+						this._addRule = false;
 						this._addRound = false;
 						this._addStart = false;
 						this._addFirst = false;
