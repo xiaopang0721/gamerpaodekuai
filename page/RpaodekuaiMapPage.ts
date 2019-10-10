@@ -45,6 +45,7 @@ module gamerpaodekuai.page {
         private _pointBomb: any = [];   //每局炸弹积分
         private _unitCounts: number;    //最大玩家数
         private _cardCounts: number;    //每人手牌数
+        private _bombNums: any = [0, 0, 0]; //各个座位的炸弹数
         private _qiangGuan: number;     //是否抢关
         private _guanShang: number;     //是否必须管上
         private _chooseCards: any = []; //选中的牌
@@ -656,7 +657,7 @@ module gamerpaodekuai.page {
             this._viewUI.text_cardroomid.text = this._mapInfo.GetCardRoomId();
             if (!this._paodekuaiMgr.isReLogin) {
                 this._viewUI.view_cardroom.btn_invite.visible = true;
-                this._viewUI.view_cardroom.btn_invite.x = this._paodekuaiStory.isCardRoomMaster() ? 420 : this._viewUI.view_cardroom.btn_start.x;
+                this._viewUI.view_cardroom.btn_invite.centerX = this._paodekuaiStory.isCardRoomMaster() ? -200 : 0;
                 this._viewUI.view_cardroom.btn_start.visible = this._paodekuaiStory.isCardRoomMaster();
                 this._viewUI.text_info.visible = !this._viewUI.view_cardroom.btn_start.visible;
             } else {
@@ -774,6 +775,7 @@ module gamerpaodekuai.page {
                 this.updateTGUI();
                 if (betPos == mainIdx) {
                     this._viewUI.box_btn.visible = true;
+                    this.resetChooseCards();
                     this.CheckBtnStatus(mainIdx);
                 } else {
                     this._viewUI.box_btn.visible = false;
@@ -837,7 +839,6 @@ module gamerpaodekuai.page {
             for (let i = 1; i < 5; i++) {
                 let unit = this._game.sceneObjectMgr.getUnitByIdx(i)
                 let point: number = 0; //积分
-                let bombNum: number = 0;//炸弹数
                 for (let k = 0; k < this._pointTemp.length / 2; k++) {
                     if (i == this._pointTemp[k * 2]) {
                         point = this._pointTemp[k * 2 + 1];
@@ -847,16 +848,17 @@ module gamerpaodekuai.page {
                 for (let k = 0; k < this._pointBomb.length / 2; k++) {
                     if (i == this._pointBomb[k * 2]) {
                         let bombGetNum = this._pointBomb[k * 2 + 1]
-                        if (bombGetNum > 0) bombNum++;
                         point = point + bombGetNum;
                         break;
                     }
                 }
                 let cardCount: string; //手牌数量
+                let bombNum: number;//炸弹数
                 let posIdx = (i - this._mainIdx + this._unitCounts) % this._unitCounts;
                 for (let index = 0; index < this._surplusCards.length; index++) {
                     if (posIdx == index) {
                         cardCount = this._surplusCards[index];
+                        bombNum = this._bombNums[index];
                         break;
                     }
                 }
@@ -1068,6 +1070,7 @@ module gamerpaodekuai.page {
                                             this._bombView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._bombView]);
                                             this._bombView.ani1.play(1, false);
                                         }
+                                        this._bombNums[posIdx]++;
                                     } else if (type == CARD_TYPE.CARDS_TYPE_TWO_FEIJI || type == CARD_TYPE.CARDS_TYPE_THREE_FEIJI || type == CARD_TYPE.CARDS_TYPE_FOUR_FEIJI) {
                                         let cardLen = cards.length;
                                         let isDaiCB = false;
@@ -2063,6 +2066,21 @@ module gamerpaodekuai.page {
                     }
                 }
             }
+        }
+
+        //将选中的手牌重新置为未选中状态
+        private resetChooseCards(): void {
+            //将之前选中的牌复归原位
+            if (this._chooseCards.length > 0) {
+                for (let i = 0; i < this._chooseCards.length; i++) {
+                    let card = this._chooseCards[i];
+                    if (card) {
+                        card.toggle = false;
+                    }
+                    this._chooseCards.splice(i, 1);
+                }
+            }
+            this._chooseCards = [];
         }
 
         //重置数据
