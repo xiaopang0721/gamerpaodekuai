@@ -717,8 +717,6 @@ module gamerpaodekuai.page {
                 }
             }
             if (state == MAP_STATUS.MAP_STATE_DEAL) {
-                this._viewUI.btn_back.skin = PathGameTongyong.ui_tongyong_general + "btn_js.png";
-                this._viewUI.btn_back.tag = 2;
                 this._viewUI.view_paixie.ani2.play(0, true);
             } else {
                 this._viewUI.view_paixie.ani2.gotoAndStop(0);
@@ -734,6 +732,9 @@ module gamerpaodekuai.page {
                 this._viewUI.box_start_info.visible = false;
             }
             if (state == MAP_STATUS.MAP_STATE_SHUFFLE) {
+                //按钮
+                this._viewUI.btn_back.skin = PathGameTongyong.ui_tongyong_general + "btn_js.png";
+                this._viewUI.btn_back.tag = 2;
                 if (this._ksyxView.ani1.isPlaying) {
                     this._ksyxView.ani1.gotoAndStop(1);
                     this._ksyxView.ani1.play(1, false);
@@ -1904,7 +1905,7 @@ module gamerpaodekuai.page {
             if (!valueClip.parent) this._viewUI.box_view.addChildAt(valueClip, deep);
             valueClip.pos(posX, posY);
             if (isZhaDan) {
-                let imgZhaDan: LImage = new LImage(Path_game_rpaodekuai.ui_paodekuai + "zhadan.png");
+                let imgZhaDan: LImage = new LImage(PathGameTongyong.ui_tongyong_general + "zhadan.png");
                 imgZhaDan.y = -imgZhaDan.height;
                 imgZhaDan.x = 0;
                 valueClip.addChild(imgZhaDan);
