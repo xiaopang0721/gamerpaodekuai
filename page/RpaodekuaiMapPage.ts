@@ -166,6 +166,7 @@ module gamerpaodekuai.page {
 
         //打开时要处理的东西
         private updateViewUI(): void {
+            this._bombNums = [0,0,0];
             this._qgCurResult = 0;
             this._typeFirst = 0;
             this._viewUI.img_menu.visible = false;
@@ -2076,8 +2077,9 @@ module gamerpaodekuai.page {
                     let card = this._chooseCards[i];
                     if (card) {
                         card.toggle = false;
+                        this._chooseCards.splice(i, 1);
+                        i--;
                     }
-                    this._chooseCards.splice(i, 1);
                 }
             }
             this._chooseCards = [];
