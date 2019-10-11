@@ -43,6 +43,7 @@ module gamerpaodekuai.data {
 		private _addFirst: boolean = false;//先手标题已增加
 		private _addShowCards: boolean = false;//结束摊牌标题已增加
 		private _addSettle: boolean = false;//结算标题已增加
+		private _boomSettle: number[] = [];//炸弹结算
 		public getBattleInfoToObj(): any {
 			let battleObj: any[] = [];
 			this._roundCount = 1;
@@ -63,20 +64,25 @@ module gamerpaodekuai.data {
 						battleObj.push({ type: 5, rules: rules });
 					}
 				}
-				else if (info instanceof gamecomponent.object.BattleInfoStart) {	//抢关
+				else if (info instanceof gamecomponent.object.BattleInfoStart) { //抢关
 					if (!this._addStart) {
 						this._addStart = true;
 						battleObj.push({ type: 2, title: "开始抢庄" });
 					}
 					let desc = info.BetVal == 1 ? name + "抢关" : name + "不抢关";
 					battleObj.push({ type: 6, desc: desc });
-				} else if (info instanceof gamecomponent.object.BattleInfoSeeCard) {	//先手
+				} else if (info instanceof gamecomponent.object.BattleInfoQiangGuanEnd) { //先手
 					if (!this._addFirst) {
 						this._addFirst = true;
 						battleObj.push({ type: 2, title: "先手玩家" });
 					}
-					let desc = name + HtmlFormat.addHtmlColor("黑桃3", TeaStyle.COLOR_GREEN);
+					name = this.GetPlayerNameFromSeat(info.qiang_pos) + "：";
+					let desc = name + HtmlFormat.addHtmlColor(info.qiang_type == 1 ? "抢关成功" : "黑桃3", TeaStyle.COLOR_GREEN);
 					battleObj.push({ type: 6, desc: desc });
+				} else if (info instanceof gamecomponent.object.BattleInfoSpecial) { //炸弹结算
+					if (info.SpecialVal > 0) {//出炸弹的人记录下来
+						this._boomSettle[info.SeatIndex - 1] = 1;
+					}
 				} else if (info instanceof gamecomponent.object.BattleInfoSettle) {	//结算
 					if (!this._addSettle) {
 						this._addSettle = true;
@@ -90,7 +96,8 @@ module gamerpaodekuai.data {
 					} else {
 						desc = name + " 积分 +" + info.SettleVal;
 					}
-					battleObj.push({ type: 6, desc: desc });
+					let isboom: boolean = this._boomSettle[info.SeatIndex - 1] == 1;//炸弹结算
+					battleObj.push({ type: 6, desc: desc, isboom: isboom });
 				} else if (info instanceof gamecomponent.object.BattleInfoShowCards) {	//摊牌
 					if (!this._addShowCards) {
 						this._addShowCards = true;
@@ -102,13 +109,13 @@ module gamerpaodekuai.data {
 					this._showcardCount++;
 					if (this._showcardCount == this.GetPlayerNumFromSeat()) {
 						this._roundCount++;//下一回合计数
-						this._addRule = false;
 						this._addRound = false;
 						this._addStart = false;
 						this._addFirst = false;
 						this._addShowCards = false;
 						this._addSettle = false;
 						this._showcardCount = 0;
+						this._boomSettle = [];
 					}
 				}
 			}
