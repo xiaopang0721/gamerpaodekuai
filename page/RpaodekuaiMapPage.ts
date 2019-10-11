@@ -1810,7 +1810,7 @@ module gamerpaodekuai.page {
             if (this._winerPos.length == 1) {   //有人赢了
                 for (let i: number = 0; i < this._settleLoseInfo.length; i++) {
                     let unitPos = this._settleLoseInfo[i];
-                    this.addMoneyFly(unitPos, this._winerPos[0]);
+                    // this.addMoneyFly(unitPos, this._winerPos[0]);
                     if (this._isCurQiangGuan) {
                         this._qgCurResult = 1;
                         // 播全关特效
@@ -1827,7 +1827,7 @@ module gamerpaodekuai.page {
             } else if (this._settleLoseInfo.length == 1) {  //抢关的人输了
                 for (let i: number = 0; i < this._winerPos.length; i++) {
                     let unitPos = this._winerPos[i];
-                    this.addMoneyFly(this._settleLoseInfo[0], unitPos);
+                    // this.addMoneyFly(this._settleLoseInfo[0], unitPos);
                 }
                 if (this._isCurQiangGuan) {
                     this._qgCurResult = 2;
