@@ -47,6 +47,7 @@ module gamerpaodekuai.data {
 		public getBattleInfoToObj(): any {
 			let battleObj: any[] = [];
 			this._roundCount = 1;
+			let isHeiTaoSan: boolean = false;
 			for (let i = 0; i < this._battleInfoMgr.info.length; i++) {
 				let info = this._battleInfoMgr.info[i] as gamecomponent.object.BattleInfoBase;
 				let name = this.GetPlayerNameFromSeat(info.SeatIndex) + "：";
@@ -59,7 +60,8 @@ module gamerpaodekuai.data {
 						this._addRule = true;
 						let rules: number[] = [];
 						for (let i: number = 0; i < info.Rules.length; i++) {
-							rules.push(info.Rules[i])
+							rules.push(info.Rules[i]);
+							isHeiTaoSan = rules[3] == 0;
 						}
 						battleObj.push({ type: 5, rules: rules });
 					}
@@ -77,7 +79,7 @@ module gamerpaodekuai.data {
 						battleObj.push({ type: 2, title: "先手玩家" });
 					}
 					name = this.GetPlayerNameFromSeat(info.qiang_pos) + "：";
-					let desc = name + HtmlFormat.addHtmlColor(info.qiang_type == 1 ? "抢关成功" : "黑桃3", TeaStyle.COLOR_GREEN);
+					let desc = name + HtmlFormat.addHtmlColor(info.qiang_type == 1 ? "抢关成功" : isHeiTaoSan ? "黑桃3" : "赢家", TeaStyle.COLOR_GREEN);
 					battleObj.push({ type: 6, desc: desc });
 				} else if (info instanceof gamecomponent.object.BattleInfoSpecial) { //炸弹结算
 					if (info.SpecialVal > 0) {//出炸弹的人记录下来
