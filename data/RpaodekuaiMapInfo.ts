@@ -76,14 +76,13 @@ module gamerpaodekuai.data {
 						this._addFirst = true;
 						battleObj.push({ type: 2, title: "先手玩家" });
 					}
+					name = this.GetPlayerNameFromSeat(info.qiang_pos) + "：";
 					let desc = name + HtmlFormat.addHtmlColor(info.qiang_type == 1 ? "抢关成功" : "黑桃3", TeaStyle.COLOR_GREEN);
 					battleObj.push({ type: 6, desc: desc });
 				} else if (info instanceof gamecomponent.object.BattleInfoSpecial) { //炸弹结算
 					if (info.SpecialVal > 0) {//出炸弹的人记录下来
 						this._boomSettle[info.SeatIndex - 1] = 1;
 					}
-					let desc = name + HtmlFormat.addHtmlColor("黑桃3", TeaStyle.COLOR_GREEN);
-					battleObj.push({ type: 6, desc: desc });
 				} else if (info instanceof gamecomponent.object.BattleInfoSettle) {	//结算
 					if (!this._addSettle) {
 						this._addSettle = true;
@@ -116,6 +115,7 @@ module gamerpaodekuai.data {
 						this._addShowCards = false;
 						this._addSettle = false;
 						this._showcardCount = 0;
+						this._boomSettle = [];
 					}
 				}
 			}
