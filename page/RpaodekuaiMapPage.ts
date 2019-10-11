@@ -804,7 +804,7 @@ module gamerpaodekuai.page {
                 this.resetData();
                 this.clearMoneyImg();
                 this._paodekuaiMgr.resetData();
-                this._toupiaoMgr.resetData()
+                // this._toupiaoMgr.resetData()
                 this._paodekuaiMgr.clear();
             }
             if (state == MAP_STATUS.MAP_STATE_SETTLE) {
