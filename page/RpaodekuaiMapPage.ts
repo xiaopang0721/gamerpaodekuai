@@ -1089,8 +1089,9 @@ module gamerpaodekuai.page {
                                                 this._fjdcbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._fjdcbView]);
                                                 this._fjdcbView.ani1.play(1, false);
                                             }
+                                            type = 7;
                                         } else {
-                                            //播飞机特效 不带翅膀
+                                            //播飞机特效 不带翅膀 三顺
                                             if (this._feijiView.ani1.isPlaying) {
                                                 this._feijiView.ani1.gotoAndStop(1);
                                                 this._feijiView.ani1.play(1, false);
@@ -1099,9 +1100,11 @@ module gamerpaodekuai.page {
                                                 this._feijiView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._feijiView]);
                                                 this._feijiView.ani1.play(1, false);
                                             }
+                                            type = 9;
                                         }
                                     }
                                 }
+
                                 this._viewUI["img_type" + posIdx].visible = true;
                                 this._viewUI["img_type" + posIdx].img_px1.skin = Path_game_rpaodekuai.ui_paodekuai + "effect/px/px_" + type + ".png";
                                 this._viewUI["img_type" + posIdx].img_px2.skin = Path_game_rpaodekuai.ui_paodekuai + "effect/px/px_" + type + ".png";

@@ -161,8 +161,10 @@ module gamerpaodekuai.manager {
 		//判断两连飞机
 		private isTwoFeiJi(cards): boolean {
 			if (this.allCards.length >= 10) {
-				if (cards.length != 10) return false;
+				//不是可以全出状态,如果不是10张飞机带翅膀或者6张的三顺
+				if (cards.length != 10 && cards.length != 6) return false;
 			} else {
+				//可以全出状态
 				if (cards.length != this.allCards.length) return false;
 				if (this.allCards.length < 6) return false;
 			}
@@ -193,6 +195,8 @@ module gamerpaodekuai.manager {
 					return true;
 				}
 			} else {
+				//三个三张 还有一个单支 如果不是全出的话，这时候是不能出的
+				if (copyCards.length == 1 && this.allCards.length != cards.length) return false;
 				if (temp1[0].GetCardVal() - 1 == temp2[0].GetCardVal()) {
 					this.maxCardVal = temp1[0].GetCardVal();
 					return true;
@@ -224,7 +228,7 @@ module gamerpaodekuai.manager {
 		//判断3连飞机
 		private isThreeFeiJi(cards: any): boolean {
 			if (this.allCards.length >= 15) {
-				if (cards.length != 15) return false;
+				if (cards.length != 15 && cards.length != 9) return false;
 			} else {
 				if (cards.length != this.allCards.length) return false;
 				if (this.allCards.length < 9) return false;
@@ -254,12 +258,16 @@ module gamerpaodekuai.manager {
 			let temp4 = this.findSomeCards(copyCards, 3);
 			let temp5 = this.findSomeCards(copyCards, 3);
 			if (temp4.length < 3) {
+				//3个3张
 				if (temp1[0].GetCardVal() - 1 == temp2[0].GetCardVal() && temp2[0].GetCardVal() - 1 == temp3[0].GetCardVal()) {
 					this.maxCardVal = temp1[0].GetCardVal();
 					return true;
 				}
 			} else {
 				if (temp5.length < 3) {
+					//有4个3张
+					//剩余3张手牌 如果不是全出的话 不能出
+					if (copyCards.length <= 3 && this.allCards.length != cards.length) return false;
 					if (temp1[0].GetCardVal() - 1 == temp2[0].GetCardVal() && temp2[0].GetCardVal() - 1 == temp3[0].GetCardVal()) {
 						this.maxCardVal = temp1[0].GetCardVal();
 						return true;
@@ -268,6 +276,7 @@ module gamerpaodekuai.manager {
 						return true;
 					}
 				} else {
+					//有5个3张
 					if (temp1[0].GetCardVal() - 1 == temp2[0].GetCardVal() && temp2[0].GetCardVal() - 1 == temp3[0].GetCardVal()) {
 						this.maxCardVal = temp1[0].GetCardVal();
 						return true;
