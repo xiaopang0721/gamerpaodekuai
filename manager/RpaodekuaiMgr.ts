@@ -25,6 +25,7 @@ module gamerpaodekuai.manager {
 		public shunziCount: number = 5;	//几张起顺
 		public bombA: number = 0;	//3A是否炸弹
 		public siDaiSan: number = 1;	//是否可以四带三
+		public baodi:number = 1;	//报单
 
 		static readonly MAPINFO_OFFLINE: string = "PaodekuaiMgr.MAPINFO_OFFLINE";//假精灵
 		static readonly DEAL_CARDS: string = "PaodekuaiMgr.DEAL_CARDS";//发牌结束

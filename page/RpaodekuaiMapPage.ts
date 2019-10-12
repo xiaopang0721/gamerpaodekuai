@@ -67,6 +67,8 @@ module gamerpaodekuai.page {
         private _xsPos: Array<any> = []          //先手动画飞向的动画  top,ceterX,rotation
         private _toupiaoMgr: TouPiaoMgr;//投票解散管理器
         private _typeFirst: number   //当局先手类型
+        private _nextIsBaoDan: boolean = false;  //上家是否报单了
+        private _fangShuiSeat: number = 0;   //放水座位号
 
         constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
             super(v, onOpenFunc, onCloseFunc);
@@ -169,6 +171,9 @@ module gamerpaodekuai.page {
             this._bombNums = [0, 0, 0];
             this._qgCurResult = 0;
             this._typeFirst = 0;
+            this._fangShuiSeat = 0;
+            this._nextIsBaoDan = false;
+            this._viewUI.text_bd.visible = false;
             this._viewUI.img_menu.visible = false;
             this._viewUI.img_roomRule.visible = false;
             this._viewUI.img_roomRule.x = -185;
@@ -533,6 +538,7 @@ module gamerpaodekuai.page {
                 this._paodekuaiMgr.bombA = data.bombA;
                 this._paodekuaiMgr.siDaiSan = data.sidaisan;
                 this._paodekuaiMgr.shunziCount = data.shunzi;
+                this._paodekuaiMgr.baodi = data.baodi;
                 this._paodekuaiMgr.totalUnitCount = this._unitCounts;
                 for (let i = 0; i < this._unitCounts; i++) {
                     this._surplusCards[i] = this._cardCounts;
@@ -559,7 +565,7 @@ module gamerpaodekuai.page {
                     this._viewUI.lb_ypbd.visible = this._guanShang == 1; //有牌必打
                     if (this._viewUI.lb_ypbd.visible) this._showUIlbArr.push(this._viewUI.lb_ypbd);
 
-                    this._viewUI.lb_bdbd.visible = data.baodi ? true : false; //报单保底
+                    this._viewUI.lb_bdbd.visible = this._paodekuaiMgr.baodi ? true : false; //报单保底
                     if (this._viewUI.lb_bdbd.visible) this._showUIlbArr.push(this._viewUI.lb_bdbd);
 
                     this._viewUI.lb_sds.visible = this._paodekuaiMgr.siDaiSan ? true : false;  //四带三
@@ -875,7 +881,8 @@ module gamerpaodekuai.page {
                         multiple: this._qiangCount * 2 + 1,     //倍数
                         bombNum: bombNum,                    //炸弹数
                         isCurQiangGuan: this._isCurQiangGuan,                //是否抢关
-                        qgResult: this._qgCurResult                   //抢关结果
+                        qgResult: this._qgCurResult,                   //抢关结果
+                        isFangShui: this._fangShuiSeat == unit.GetIndex()   //是否放水
                     }
                     temps.push(obj);
                 }
@@ -1268,6 +1275,14 @@ module gamerpaodekuai.page {
                             if (idx != mainIdx) {
                                 this._viewUI["view_baodan" + posIdx].visible = true;
                             }
+                            if (this._paodekuaiMgr.baodi) {
+                                //主玩家的下家
+                                let nextMainIdx = (mainIdx + 1) > this._unitCounts ? 1 : mainIdx + 1;
+                                if (idx == nextMainIdx) {
+                                    //下家报单了
+                                    this._nextIsBaoDan = true;
+                                }
+                            }
                             if (!this._paodekuaiMgr.isReLogin) {
                                 let unit = this._game.sceneObjectMgr.getUnitByIdx(idx);
                                 if (unit) {
@@ -1293,6 +1308,7 @@ module gamerpaodekuai.page {
                         if (this._battleIndex < i) {
                             this._battleIndex = i
                             let info = battleInfoMgr.info[i] as gamecomponent.object.BattleInfoSettle;
+                            this._fangShuiSeat = info.LunShu;   //放水座位号
                             if (info.SettleVal > 0) {
                                 this._winerPos.push(posIdx);
                             } else {
@@ -1779,6 +1795,11 @@ module gamerpaodekuai.page {
                         this._viewUI.tg_info.visible = false;
                     }
                 }
+            }
+            if (this._nextIsBaoDan) {
+                this._viewUI.text_bd.visible = true;
+            } else {
+                this._viewUI.text_bd.visible = false;
             }
         }
 
