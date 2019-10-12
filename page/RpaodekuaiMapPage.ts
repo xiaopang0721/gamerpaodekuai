@@ -113,7 +113,7 @@ module gamerpaodekuai.page {
                 this._paodekuaiStory = this._game.sceneObjectMgr.story as RpaodekuaiStory;
                 this._paodekuaiMgr = this._paodekuaiStory.paodekuaiMgr;
             }
-            this._game.playMusic(Path.music + "paodekuai/pdk_BGM.mp3");
+            this._game.playMusic(Path.music + "rpaodekuai/pdk_BGM.mp3");
         }
 
         // 页面打开时执行函数
