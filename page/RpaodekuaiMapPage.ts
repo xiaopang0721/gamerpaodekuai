@@ -166,7 +166,7 @@ module gamerpaodekuai.page {
 
         //打开时要处理的东西
         private updateViewUI(): void {
-            this._bombNums = [0,0,0];
+            this._bombNums = [0, 0, 0];
             this._qgCurResult = 0;
             this._typeFirst = 0;
             this._viewUI.img_menu.visible = false;
@@ -1820,7 +1820,9 @@ module gamerpaodekuai.page {
                             this._qgView.ani1.play(1, false);
                         } else {
                             this._viewUI.box_view.addChild(this._qgView);
-                            this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView, this.playWinEffect]);
+                            this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView, () => {
+                                this.playWinEffect();
+                            }]);
                             this._qgView.ani1.play(1, false);
                         }
                     }
@@ -1838,7 +1840,9 @@ module gamerpaodekuai.page {
                         this._qgsbView.ani1.play(1, false);
                     } else {
                         this._viewUI.box_view.addChild(this._qgsbView);
-                        this._qgsbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgsbView, this.playWinEffect]);
+                        this._qgsbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgsbView, () => {
+                            this.playWinEffect();
+                        }]);
                         this._qgsbView.ani1.play(1, false);
                     }
                 }
