@@ -797,6 +797,7 @@ module gamerpaodekuai.page {
                 this._viewUI.img_point.rotation = this._lightPointTemp[posIdx][0];
                 this._viewUI.img_point.scaleX = this._lightPointTemp[posIdx][1];
             } else {
+                this._viewUI.text_bd.visible = false;
                 this._viewUI.box_btn.visible = false;
                 this._viewUI.btn_tuoguan.visible = false;
                 this._viewUI.box_tg.visible = false;
@@ -856,7 +857,7 @@ module gamerpaodekuai.page {
                     if (i == this._pointBomb[k * 2]) {
                         let bombGetNum = this._pointBomb[k * 2 + 1]
                         point = point + bombGetNum;
-                        break;
+                        continue;
                     }
                 }
                 let cardCount: string; //手牌数量
@@ -1796,7 +1797,7 @@ module gamerpaodekuai.page {
                     }
                 }
             }
-            if (this._nextIsBaoDan) {
+            if (this._game.sceneObjectMgr.mainUnit.GetIdentity() == 0 && this._nextIsBaoDan) {
                 this._viewUI.text_bd.visible = true;
             } else {
                 this._viewUI.text_bd.visible = false;
