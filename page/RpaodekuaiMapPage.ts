@@ -1049,9 +1049,6 @@ module gamerpaodekuai.page {
                                 if (this._surplusCards[posIdx] <= 0) this._viewUI["img_finish" + posIdx].visible = true;
                             }
                             let type = info.CardType;
-                            if (type >= CARD_TYPE.CARDS_TYPE_THREE_FEIJI) {
-                                type = CARD_TYPE.CARDS_TYPE_TWO_FEIJI;
-                            }
                             if (type > CARD_TYPE.CARDS_TYPE_DUI) { //单张和对子不显示牌型
                                 if (posIdx == 1) {
                                     if (type == CARD_TYPE.CARDS_TYPE_TWO_FEIJI) {
