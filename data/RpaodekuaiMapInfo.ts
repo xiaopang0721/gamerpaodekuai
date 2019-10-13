@@ -123,6 +123,7 @@ module gamerpaodekuai.data {
 						this._addSettle = false;
 						this._showcardCount = 0;
 						this._boomSettle = [0, 0, 0, 0];
+						this._boomCount = [0, 0, 0, 0];
 					}
 				}
 			}
