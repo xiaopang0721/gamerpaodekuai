@@ -38,7 +38,6 @@ module gamerpaodekuai.data {
 		private _roundCount: number;//回合计数，方便房卡不同局分割开
 		private _showcardCount: number = 0;//摊牌计数，方便重置标识
 		private _addRound: boolean = false;//回合标题已增加
-		private _addRule: boolean = false;//规则标题已增加
 		private _addStart: boolean = false;//抢关标题已增加
 		private _addFirst: boolean = false;//先手标题已增加
 		private _addShowCards: boolean = false;//结束摊牌标题已增加
@@ -48,22 +47,23 @@ module gamerpaodekuai.data {
 		public getBattleInfoToObj(): any {
 			let battleObj: any[] = [];
 			this._roundCount = 1;
-			let isHeiTaoSan: boolean = false;
+			let isHeiTaoSan: boolean = false;//是否黑桃3先手
+			let addRule: boolean = false;//规则标题已增加
 			for (let i = 0; i < this._battleInfoMgr.info.length; i++) {
 				let info = this._battleInfoMgr.info[i] as gamecomponent.object.BattleInfoBase;
 				let name = this.GetPlayerNameFromSeat(info.SeatIndex) + "：";
-				if (!this._addRound && this._addRule) {//局数信息
+				if (!this._addRound && addRule) {//局数信息
 					this._addRound = true;
 					battleObj.push({ type: 1, title: StringU.substitute("第{0}局", this._roundCount) });
 				}
 				if (info instanceof gamecomponent.object.BattleInfoCardRule) {	//规则
-					if (!this._addRule) {
-						this._addRule = true;
+					if (!addRule) {
+						addRule = true;
 						let rules: number[] = [];
 						for (let i: number = 0; i < info.Rules.length; i++) {
 							rules.push(info.Rules[i]);
-							isHeiTaoSan = rules[3] == 0;
 						}
+						isHeiTaoSan = rules[3] == 0;
 						battleObj.push({ type: 5, rules: rules });
 					}
 				}
