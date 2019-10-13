@@ -89,7 +89,7 @@ module gamerpaodekuai.page {
                 let curTime = this._game.sync.serverTimeBys;
                 let time = Math.floor(this._endTime - curTime) + 1;
                 if (time > 0) {
-                    let str = StringU.substitute("{0}后开始{1}{2}局...", HtmlFormat.addHtmlColor(time + "s", TeaStyle.COLOR_YELLOW), HtmlFormat.addHtmlColor(this.dataSource[0] + "/", TeaStyle.COLOR_YELLOW), HtmlFormat.addHtmlColor(this.dataSource[1], TeaStyle.COLOR_YELLOW));
+                    let str = StringU.substitute("{0}后开始{1}{2}局...", HtmlFormat.addHtmlColor(time + "s", TeaStyle.COLOR_YELLOW), HtmlFormat.addHtmlColor((this.dataSource[0] + 1) + "/", TeaStyle.COLOR_YELLOW), HtmlFormat.addHtmlColor(this.dataSource[1], TeaStyle.COLOR_YELLOW));
                     TextFieldU.setHtmlText(this._viewUI.lab_xinxi, str);
                 } else {
                     // 最后一局不自动关闭
@@ -159,7 +159,7 @@ module gamerpaodekuai.page {
             this.lab_point.color = parseFloat(this._data.point) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
             this.lbl_totalpoint.color = parseFloat(this._data.totalPoint) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
             //放水
-            if(this._data.isFangShui){
+            if (this._data.isFangShui) {
                 this.img_bp.visible = true;
             }
         }
