@@ -118,6 +118,7 @@ module gamerpaodekuai.page {
             this.img_qgsb.visible = false;
             this.lab_double.visible = false;
             this.img_qg.visible = false;
+            this.img_bp.visible = false;
             if (this._data.isCurQiangGuan) {
                 //抢关了
                 if (this._data.qgResult == 1) {
@@ -157,6 +158,10 @@ module gamerpaodekuai.page {
             this.lab_double.centerX = this.lab_chip.centerX + this.lab_chip.width + 5;
             this.lab_point.color = parseFloat(this._data.point) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
             this.lbl_totalpoint.color = parseFloat(this._data.totalPoint) >= 0 ? TeaStyle.COLOR_GREEN : TeaStyle.COLOR_RED;
+            //放水
+            if(this._data.isFangShui){
+                this.img_bp.visible = true;
+            }
         }
 
         destroy() {
