@@ -1394,7 +1394,8 @@ module gamerpaodekuai.page {
             if (this._playCardsConfig.player > 0) {
                 if (type == 5) {    //炸弹
                     if (this._playCardsConfig.card_type == 5) {
-                        if (val <= this._playCardsConfig.max_val) return false;
+                        //不大于上次出的牌,并且不是自己出的牌
+                        if (val <= this._playCardsConfig.max_val && this._playCardsConfig.player != this._mainIdx) return false;
                     }
                 } else {
                     if (this._playCardsConfig.player != this._mainIdx) { //说明上次出牌不是你大的
