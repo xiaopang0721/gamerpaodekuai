@@ -685,16 +685,16 @@ module gamerpaodekuai.page {
         }
 
         // 游戏结束 场景恢复
-        private setGameEnd() {
-            this._viewUI.view_cardroom.visible = false;
-            this._viewUI.text_cardroomid.visible = false;
-            this._isGameEnd = true;
-            this._paodekuaiMgr.resetData();
-            this._toupiaoMgr.resetData();
-            this._paodekuaiMgr.clear();
-            this.resetData();
-            this._battleIndex = -1;
-        }
+        // private setGameEnd() {
+        //     this._viewUI.view_cardroom.visible = false;
+        //     this._viewUI.text_cardroomid.visible = false;
+        //     this._isGameEnd = true;
+        //     this._paodekuaiMgr.resetData();
+        //     this._toupiaoMgr.resetData();
+        //     this._paodekuaiMgr.clear();
+        //     this.resetData();
+        //     this._battleIndex = -1;
+        // }
 
         //地图状态
         private onUpdateMapState(): void {
@@ -717,6 +717,7 @@ module gamerpaodekuai.page {
                 //游戏开始特效
                 this._viewUI.box_view.addChild(this._ksyxView);
                 this._ksyxView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._ksyxView]);
+                this._specialIsPlaying = true;
                 this._ksyxView.ani1.play(1, false);
             } else {
                 if (this._ksyxView.ani1.isPlaying) {
@@ -753,6 +754,7 @@ module gamerpaodekuai.page {
                     this._pageHandle.pushClose({ id: RpaodekuaiPageDef.PAGE_PDK_CARDROOM_SETTLE, parent: this._game.uiRoot.HUD });
                     this.playDealAni();
                 }]);
+                this._specialIsPlaying = true;
                 this._ksyxView.ani1.play(1, false);
             }
             if (state >= MAP_STATUS.MAP_STATE_DEAL_END) {
@@ -816,7 +818,8 @@ module gamerpaodekuai.page {
                 this._paodekuaiMgr.clear();
             }
             if (state == MAP_STATUS.MAP_STATE_SETTLE) {
-                this.addBankerWinEff();
+                if (!this._specialIsPlaying)
+                    this.addBankerWinEff();
                 for (let i = 1; i < 4; i++) {
                     this._viewUI["view_baodan" + i].visible = false;
                 }
@@ -1013,11 +1016,17 @@ module gamerpaodekuai.page {
         }
 
         //各种特殊牌效果播完
+        private _specialIsPlaying: boolean = false;
         private onPlayAniOver(view: any, callBack?: Function): void {
+            this._specialIsPlaying = false;
             view.ani1.off(LEvent.COMPLETE, this, this.onPlayAniOver);
             view.ani1.gotoAndStop(1);
             this._viewUI.box_view.removeChild(view);
             callBack && callBack();
+            //检测所有特效播放完是否有结束当前牌局，是的话，并且是你赢了的话，播放结算动画
+            if (this._mapInfo.GetMapState() == MAP_STATUS.MAP_STATE_SETTLE) {
+                this.addBankerWinEff();
+            }
         }
 
         //战斗日志
@@ -1074,6 +1083,7 @@ module gamerpaodekuai.page {
                                         } else {
                                             this._viewUI.box_view.addChild(this._bombView);
                                             this._bombView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._bombView]);
+                                            this._specialIsPlaying = true;
                                             this._bombView.ani1.play(1, false);
                                         }
                                         this._bombNums[posIdx]++;
@@ -1092,6 +1102,7 @@ module gamerpaodekuai.page {
                                             } else {
                                                 this._viewUI.box_view.addChild(this._fjdcbView);
                                                 this._fjdcbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._fjdcbView]);
+                                                this._specialIsPlaying = true;
                                                 this._fjdcbView.ani1.play(1, false);
                                             }
                                             type = 7;
@@ -1103,6 +1114,7 @@ module gamerpaodekuai.page {
                                             } else {
                                                 this._viewUI.box_view.addChild(this._feijiView);
                                                 this._feijiView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._feijiView]);
+                                                this._specialIsPlaying = true;
                                                 this._feijiView.ani1.play(1, false);
                                             }
                                             type = 9;
@@ -1846,10 +1858,12 @@ module gamerpaodekuai.page {
                             this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView, () => {
                                 this.playWinEffect();
                             }]);
+                            this._specialIsPlaying = true;
                             this._qgView.ani1.play(1, false);
                         }
                     }
                 }
+                this.playWinEffect();
             } else if (this._settleLoseInfo.length == 1) {  //抢关的人输了
                 for (let i: number = 0; i < this._winerPos.length; i++) {
                     let unitPos = this._winerPos[i];
@@ -1866,6 +1880,7 @@ module gamerpaodekuai.page {
                         this._qgsbView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgsbView, () => {
                             this.playWinEffect();
                         }]);
+                        this._specialIsPlaying = true;
                         this._qgsbView.ani1.play(1, false);
                     }
                 }
