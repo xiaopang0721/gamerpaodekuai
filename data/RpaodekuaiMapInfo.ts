@@ -83,7 +83,7 @@ module gamerpaodekuai.data {
 					battleObj.push({ type: 6, desc: desc });
 				} else if (info instanceof gamecomponent.object.BattleInfoSpecial) { //炸弹结算
 					//出炸弹的人记录下来
-					this._boomSettle[info.SeatIndex - 1] = info.SpecialVal;
+					this._boomSettle[info.SeatIndex - 1] += info.SpecialVal;
 				} else if (info instanceof gamecomponent.object.BattleInfoSettle) {	//结算
 					if (!this._addSettle) {
 						this._addSettle = true;
