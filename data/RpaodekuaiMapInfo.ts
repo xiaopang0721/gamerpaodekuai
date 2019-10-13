@@ -44,6 +44,7 @@ module gamerpaodekuai.data {
 		private _addShowCards: boolean = false;//结束摊牌标题已增加
 		private _addSettle: boolean = false;//结算标题已增加
 		private _boomSettle: number[] = [0, 0, 0, 0];//炸弹结算
+		private _boomCount: number[] = [0, 0, 0, 0];//出炸弹次数
 		public getBattleInfoToObj(): any {
 			let battleObj: any[] = [];
 			this._roundCount = 1;
@@ -84,6 +85,9 @@ module gamerpaodekuai.data {
 				} else if (info instanceof gamecomponent.object.BattleInfoSpecial) { //炸弹结算
 					//出炸弹的人记录下来
 					this._boomSettle[info.SeatIndex - 1] += info.SpecialVal;
+					if (info.SpecialVal > 0) {
+						this._boomCount[info.SeatIndex - 1]++;
+					}
 				} else if (info instanceof gamecomponent.object.BattleInfoSettle) {	//结算
 					if (!this._addSettle) {
 						this._addSettle = true;
@@ -99,8 +103,8 @@ module gamerpaodekuai.data {
 					} else {
 						desc = name + " 积分 +" + val;
 					}
-					let isboom: boolean = this._boomSettle[info.SeatIndex - 1] > 0;//炸弹结算
-					battleObj.push({ type: 6, desc: desc, isboom: isboom });
+					let boomCount: number = this._boomCount[info.SeatIndex - 1];//出炸弹次数
+					battleObj.push({ type: 6, desc: desc, val: Math.abs(val), boomCount: boomCount });
 				} else if (info instanceof gamecomponent.object.BattleInfoShowCards) {	//摊牌
 					if (!this._addShowCards) {
 						this._addShowCards = true;
