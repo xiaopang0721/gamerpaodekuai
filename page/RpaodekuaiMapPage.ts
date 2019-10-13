@@ -788,6 +788,7 @@ module gamerpaodekuai.page {
                     this.CheckBtnStatus(mainIdx);
                 } else {
                     this._viewUI.box_btn.visible = false;
+                    this._viewUI.text_bd.visible = false;
                 }
                 //清除不出的提示和出的牌
                 this._paodekuaiMgr.clearPlayingCard(betPos);
