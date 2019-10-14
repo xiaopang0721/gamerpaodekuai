@@ -103,13 +103,13 @@ module gamerpaodekuai.page {
         // 页面初始化函数
         protected init(): void {
             this._viewUI = this.createView('game_ui.paodekuai.PaoDeKuaiUI');
+            this.addChild(this._viewUI);
             this._feijiView = new ui.nqp.game_ui.paodekuai.component.Effect_feijiUI();
             this._bombView = new ui.nqp.game_ui.paodekuai.component.Effect_zhadanUI();
             this._fjdcbView = new ui.nqp.game_ui.paodekuai.component.Effect_fjdcbUI();   //飞机带翅膀
             this._ksyxView = new ui.nqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI();  //开始游戏
             this._qgView = new ui.nqp.game_ui.paodekuai.component.Effect_quanguanUI();   //全关
             this._qgsbView = new ui.nqp.game_ui.paodekuai.component.Effect_qgsbUI();     //全关失败
-            this.addChild(this._viewUI);
             this._pageHandle = PageHandle.Get("PaodekuaiMapPage");//额外界面控制器
             if (!this._paodekuaiMgr) {
                 this._paodekuaiStory = this._game.sceneObjectMgr.story as RpaodekuaiStory;
@@ -1853,23 +1853,24 @@ module gamerpaodekuai.page {
                 for (let i: number = 0; i < this._settleLoseInfo.length; i++) {
                     let unitPos = this._settleLoseInfo[i];
                     // this.addMoneyFly(unitPos, this._winerPos[0]);
-                    if (this._isCurQiangGuan) {
-                        this._qgCurResult = 1;
-                        // 播全关特效
-                        if (this._qgView.ani1.isPlaying) {
-                            this._qgView.ani1.gotoAndStop(1);
-                            this._qgView.ani1.play(1, false);
-                        } else {
-                            this._viewUI.box_view.addChild(this._qgView);
-                            this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView, () => {
-                                this.playWinEffect();
-                            }]);
-                            this._specialIsPlaying = true;
-                            this._qgView.ani1.play(1, false);
-                        }
-                    }
                 }
-                this.playWinEffect();
+                if (this._isCurQiangGuan) {
+                    this._qgCurResult = 1;
+                    // 播全关特效
+                    if (this._qgView.ani1.isPlaying) {
+                        this._qgView.ani1.gotoAndStop(1);
+                        this._qgView.ani1.play(1, false);
+                    } else {
+                        this._viewUI.box_view.addChild(this._qgView);
+                        this._qgView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._qgView, () => {
+                            this.playWinEffect();
+                        }]);
+                        this._specialIsPlaying = true;
+                        this._qgView.ani1.play(1, false);
+                    }
+                } else {
+                    this.playWinEffect();
+                }
             } else if (this._settleLoseInfo.length == 1) {  //抢关的人输了
                 for (let i: number = 0; i < this._winerPos.length; i++) {
                     let unitPos = this._winerPos[i];
@@ -1889,6 +1890,8 @@ module gamerpaodekuai.page {
                         this._specialIsPlaying = true;
                         this._qgsbView.ani1.play(1, false);
                     }
+                } else {
+                    this.playWinEffect();
                 }
             } else {
                 this.playWinEffect();
