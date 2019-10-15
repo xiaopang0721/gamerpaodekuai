@@ -31,7 +31,6 @@ module gamerpaodekuai.page {
 				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/feiji.atlas",
 				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/boom.atlas",
 				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/jiesuan.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/liandui.atlas",
 				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/px.atlas",
 				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/qgsb.atlas",
 				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/qipai.atlas",
