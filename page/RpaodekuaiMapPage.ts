@@ -215,9 +215,6 @@ module gamerpaodekuai.page {
             for (let i = 1; i < 4; i++) {
                 this._viewUI["img_finish" + i].visible = false;
             }
-            //按钮切换
-            let mainUnit: Unit = this._game.sceneObjectMgr.mainUnit;
-            if (!mainUnit) return;
             if (!this._paodekuaiStory.isCardRoomMaster()) {
                 //不是房主
                 this._viewUI.btn_back.skin = PathGameTongyong.ui_tongyong_general + "btn_fh1.png";
