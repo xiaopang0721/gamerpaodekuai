@@ -723,6 +723,7 @@ module gamerpaodekuai.page {
                 this._ksyxView.ani1.on(LEvent.COMPLETE, this, this.onPlayAniOver, [this._ksyxView]);
                 this._specialIsPlaying = true;
                 this._ksyxView.ani1.play(1, false);
+                this._game.playSound(Path_game_rpaodekuai.music_paodekuai + "kaishi.mp3", false);
             } else {
                 if (this._ksyxView.ani1.isPlaying) {
                     this._ksyxView.ani1.gotoAndStop(1);
