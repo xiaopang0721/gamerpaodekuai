@@ -90,7 +90,7 @@ module gamerpaodekuai.story {
 						for (let k = 0; k < mainCards.length; k++) {
 							this._cardsTemp.push(mainCards[k]);
 						}
-						for(let k = 0;k<mainCards.length;k++){
+						for(let k = 0;k<mainCards.length* (this._paodekuaiMgr.totalUnitCount - 1);k++){
 							this._cardsTemp.push(1);
 						}
 						let handle = new Handler(this, this._paodekuaiMgr.createObj);

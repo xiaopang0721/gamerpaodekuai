@@ -855,7 +855,7 @@ module gamerpaodekuai.manager {
 		sort() {
 			for (let i = 0; i < this._cards.length; i++) {
 				let card = this._cards[i];
-				if (i < this._cards.length / 2)
+				if (i < this._cards.length / this._totalUnitCount)
 					this.allCards.push(card);
 				else {
 					this.otherCards.push(card);
@@ -919,7 +919,7 @@ module gamerpaodekuai.manager {
 						card = this.allCards[i];
 						cardsPos = cardsMainPos[i];
 					} else {
-						card = this.otherCards[i];
+						card = this.otherCards[i + (k * cardSingleCount)];
 						card.scaleX = 0.3;
 						card.scaleY = 0.3;
 						cardsPos = cardsOtherPos[k];

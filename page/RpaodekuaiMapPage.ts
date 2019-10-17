@@ -768,8 +768,8 @@ module gamerpaodekuai.page {
                         this._viewUI["box_count" + i].visible = unit;
                         this._viewUI["lab_count" + i].text = this._surplusCards[i];
                         //清除其他人发的牌
-                        this._paodekuaiMgr.clearOtherCard();
                     }
+                    this._paodekuaiMgr.clearOtherCard();
                 }
             }
             if (state == MAP_STATUS.MAP_STATE_QIANGGUAN) {
