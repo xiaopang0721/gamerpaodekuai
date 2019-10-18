@@ -478,10 +478,11 @@ module gamerpaodekuai.page {
                                 viewPlayer.img_qifu.visible = true;
                                 viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
-                        } else {
-                            viewPlayer.img_qifu.visible = true;
-                            viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                         }
+                        //  else {
+                        //     viewPlayer.img_qifu.visible = true;
+                        //     viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
+                        // }
                     } else {
                         viewPlayer.img_qifu.visible = false;
                         viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
