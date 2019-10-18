@@ -120,6 +120,9 @@ module gamerpaodekuai.page {
         // 页面打开时执行函数
         protected onOpen(): void {
             super.onOpen();
+             //api充值不显示
+            this._viewUI.btn_chongzhi.visible = !WebConfig.enterGameLocked;
+            
             this.updateViewUI();
             this.onUpdateUnitOffline();
             if (this._paodekuaiStory instanceof gamecomponent.story.StoryRoomCardBase) {
