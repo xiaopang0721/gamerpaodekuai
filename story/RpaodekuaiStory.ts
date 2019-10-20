@@ -19,7 +19,7 @@ module gamerpaodekuai.story {
 
 	export class RpaodekuaiStory extends gamecomponent.story.StoryRoomCardBase {
 		private _paodekuaiMgr: RpaodekuaiMgr;
-		private _cardsTemp: any = [];
+		private _cardsTemp: any = [];	//所有手牌
 		private _paodekuaiMapInfo: RpaodekuaiMapInfo;
 		private _battleIndex = -1;
 
@@ -86,8 +86,12 @@ module gamerpaodekuai.story {
 					let idx = battleInfo.SeatIndex;
 					if (idx == mainIdx) {
 						this._cardsTemp = [];
-						for (let k = 0; k < battleInfo.Cards.length; k++) {
-							this._cardsTemp.push(battleInfo.Cards[k]);
+						let mainCards = this._game.sceneObjectMgr.mainPlayer.playerInfo.cards;
+						for (let k = 0; k < mainCards.length; k++) {
+							this._cardsTemp.push(mainCards[k]);
+						}
+						for(let k = 0;k<mainCards.length* (this._paodekuaiMgr.totalUnitCount - 1);k++){
+							this._cardsTemp.push(1);
 						}
 						let handle = new Handler(this, this._paodekuaiMgr.createObj);
 						this._paodekuaiMgr.Init(this._cardsTemp, handle);

@@ -20,12 +20,13 @@ module gamerpaodekuai.manager {
 	export class RpaodekuaiMgr extends gamecomponent.managers.PlayingCardMgrBase<RpaodekuaiData>{
 		public isReLogin: boolean;		//是否断线重连，各种判断操作用的
 		public isShowCards: boolean = false;	//是否翻牌
-		public allCards: any = [];	//手牌
+		public allCards: any = [];	//主玩家手牌
+		public otherCards: any = [];//其他玩家手牌
 		public maxCardVal: number = 0;	//所选牌型最大牌值
 		public shunziCount: number = 5;	//几张起顺
 		public bombA: number = 0;	//3A是否炸弹
 		public siDaiSan: number = 1;	//是否可以四带三
-		public baodi:number = 1;	//报单
+		public baodi: number = 1;	//报单
 
 		static readonly MAPINFO_OFFLINE: string = "PaodekuaiMgr.MAPINFO_OFFLINE";//假精灵
 		static readonly DEAL_CARDS: string = "PaodekuaiMgr.DEAL_CARDS";//发牌结束
@@ -41,6 +42,8 @@ module gamerpaodekuai.manager {
 		private _centerPlayPosTemp = [670, 625, 50];	//主玩家手牌中间那张牌的位置
 		private _playCardsPos1 = [[1040, 360, -22], [700, 170, 22], [240, 360, 22]];	//其他人出牌第一张位置,4人场
 		private _playCardsPos2 = [[1040, 360, -22], [240, 360, 22]];	//其他人出牌第一张位置,3人场
+		private _playFaPaiPos1 = [[169, 372], [1106, 375], [623, 186]];//其他人发牌位置，4人场
+		private _playFaPaiPos2 = [[169, 372], [1106, 375]];//其他人发牌位置，3人场
 
 		constructor(game: Game) {
 			super(game);
@@ -69,6 +72,20 @@ module gamerpaodekuai.manager {
 
 		set totalUnitCount(v: number) {
 			this._totalUnitCount = v;
+		}
+
+		//重新初始化牌
+		Init(all_val: Array<number>, create_fun: Handler): void {
+			this._cards.length = 0;
+			for (let i: number = 0; i < all_val.length; i++) {
+				let card: RpaodekuaiData;
+				card = create_fun.run();
+				card.Init(all_val[i]);
+				card.index = i;
+				this._cards.push(card)
+			}
+			create_fun.recover();
+			create_fun = null;
 		}
 
 		//心跳更新
@@ -831,14 +848,18 @@ module gamerpaodekuai.manager {
 
 		createObj() {
 			let card = this._game.sceneObjectMgr.createOfflineObject(SceneRoot.CARD_MARK, RpaodekuaiData) as RpaodekuaiData;
-			card.pos = new Vector2(864, 268);
+			card.pos = new Vector2(870, 268);
 			return card;
 		}
 
 		sort() {
 			for (let i = 0; i < this._cards.length; i++) {
 				let card = this._cards[i];
-				this.allCards.push(card);
+				if (i < this._cards.length / this._totalUnitCount)
+					this.allCards.push(card);
+				else {
+					this.otherCards.push(card);
+				}
 			}
 			let mainUnit = this._game.sceneObjectMgr.mainUnit;
 			if (!mainUnit) return;
@@ -883,20 +904,33 @@ module gamerpaodekuai.manager {
 
 		//发牌
 		fapai() {
-			let cardsPos = this.getCardsPosTemp(this.allCards.length, true);
-			let count = 0;
+			let cardSingleCount: number = this.allCards.length;	//一个人的手牌数
+			let cardsMainPos = this.getCardsPosTemp(cardSingleCount, true);
+			let cardsOtherPos = this._totalUnitCount > 3 ? this._playFaPaiPos1 : this._playFaPaiPos2;
 			let cardIndex = 0;
-			for (let i = 0; i < this.allCards.length; i++) {
-				let card = this.allCards[i];
-				if (card) {
+			let count = 0;
+			for (let k = 0; k < this._totalUnitCount; k++) {
+				for (let i = 0; i < cardSingleCount; i++) {
 					//播音效
+					let card: RpaodekuaiData;
+					let cardsPos;
+					if (k == this._totalUnitCount - 1) {
+						//最后一位给到主玩家
+						card = this.allCards[i];
+						cardsPos = cardsMainPos[i];
+					} else {
+						card = this.otherCards[i + (k * cardSingleCount)];
+						card.scaleX = 0.3;
+						card.scaleY = 0.3;
+						cardsPos = cardsOtherPos[k];
+					}
 					Laya.timer.once(50 * count, this, () => {
 						this._game.playSound(PathGameTongyong.music_tongyong + "fapai.mp3", false);
-						let posX = cardsPos[i][0];
-						let posY = cardsPos[i][1];
+						let posX = cardsPos[0];	//当前座位号的发牌位置
+						let posY = cardsPos[1];
 						card.mingpai(posX, posY);
 						cardIndex++;
-						if (cardIndex == this.allCards.length)
+						if (cardIndex >= cardSingleCount * this._totalUnitCount)
 							this.event(RpaodekuaiMgr.DEAL_CARDS);
 					});
 					count++;
@@ -915,6 +949,21 @@ module gamerpaodekuai.manager {
 					card.refapai(posX, posY);
 				}
 			}
+			//清理其他人的牌
+			this.clearOtherCard();
+		}
+
+		//清理其他的发牌
+		clearOtherCard(): void {
+			for (let i = 0; i < this.otherCards.length; i++) {
+				let card = this.otherCards[i];
+				if (card) {
+					this._game.sceneObjectMgr.clearOfflineObject(card);
+				}
+				this.otherCards.splice(i, 1);
+				i--
+			}
+			this.otherCards = [];
 		}
 
 		//出牌
@@ -1098,6 +1147,7 @@ module gamerpaodekuai.manager {
 			this._isReDealCard = false;
 			this.isShowCards = false;
 			this.allCards = [];
+			this.otherCards = [];
 			this.clearCardObject();
 		}
 	}

@@ -85,12 +85,12 @@ module gamerpaodekuai.page {
                 PathGameTongyong.atlas_game_ui_tongyong + "general/effect/fapai_1.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "general/effect/xipai.atlas",
                 Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/quanguan.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/feiji.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/boom.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/jiesuan.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/px.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/qgsb.atlas",
-				Path_game_rpaodekuai.atlas_game_ui + "paodekuai/qipai.atlas",
+                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/feiji.atlas",
+                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/boom.atlas",
+                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/jiesuan.atlas",
+                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/px.atlas",
+                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/qgsb.atlas",
+                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/qipai.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "jiaru.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "logo.atlas",
@@ -481,10 +481,11 @@ module gamerpaodekuai.page {
                                 viewPlayer.img_qifu.visible = true;
                                 viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
-                        } else {
-                            viewPlayer.img_qifu.visible = true;
-                            viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                         }
+                        //  else {
+                        //     viewPlayer.img_qifu.visible = true;
+                        //     viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
+                        // }
                     } else {
                         viewPlayer.img_qifu.visible = false;
                         viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
@@ -770,7 +771,9 @@ module gamerpaodekuai.page {
                         let unit = this._game.sceneObjectMgr.getUnitByIdx(seat);
                         this._viewUI["box_count" + i].visible = unit;
                         this._viewUI["lab_count" + i].text = this._surplusCards[i];
+                        //清除其他人发的牌
                     }
+                    this._paodekuaiMgr.clearOtherCard();
                 }
             }
             if (state == MAP_STATUS.MAP_STATE_QIANGGUAN) {
