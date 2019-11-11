@@ -482,10 +482,10 @@ module gamerpaodekuai.page {
                                 viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
                         }
-                        //  else {
-                        //     viewPlayer.img_qifu.visible = true;
-                        //     viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
-                        // }
+                         else {
+                            viewPlayer.img_qifu.visible = true;
+                            viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
+                        }
                     } else {
                         viewPlayer.img_qifu.visible = false;
                         viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
@@ -587,6 +587,7 @@ module gamerpaodekuai.page {
                     this.updateBattledInfo();
                     this.onUpdateMapState();
                     this.updateCountDown();
+                     this._toupiaoMgr.offLineReLogin();
                 }
                 this.updateCardRoomDisplayInfo();
             }
@@ -688,18 +689,6 @@ module gamerpaodekuai.page {
                 this._viewUI.view_cardroom.btn_start.off(LEvent.CLICK, this, this.onBtnClickWithTween);
             }
         }
-
-        // 游戏结束 场景恢复
-        // private setGameEnd() {
-        //     this._viewUI.view_cardroom.visible = false;
-        //     this._viewUI.text_cardroomid.visible = false;
-        //     this._isGameEnd = true;
-        //     this._paodekuaiMgr.resetData();
-        //     this._toupiaoMgr.resetData();
-        //     this._paodekuaiMgr.clear();
-        //     this.resetData();
-        //     this._battleIndex = -1;
-        // }
 
         //地图状态
         private onUpdateMapState(): void {
