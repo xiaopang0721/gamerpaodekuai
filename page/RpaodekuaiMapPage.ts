@@ -24,7 +24,7 @@ module gamerpaodekuai.page {
         private _feijiView: ui.nqp.game_ui.paodekuai.component.Effect_feijiUI;  //飞机
         private _bombView: ui.nqp.game_ui.paodekuai.component.Effect_zhadanUI;  //炸弹
         private _fjdcbView: ui.nqp.game_ui.paodekuai.component.Effect_fjdcbUI;   //飞机带翅膀
-        private _ksyxView: ui.nqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI;  //开始游戏
+        private _ksyxView: ui.ajqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI;  //开始游戏
         private _qgView: ui.nqp.game_ui.paodekuai.component.Effect_quanguanUI;      //全关
         private _qgsbView: ui.nqp.game_ui.paodekuai.component.Effect_qgsbUI;         //全关失败
         private _mapInfo: RpaodekuaiMapInfo;
@@ -106,7 +106,7 @@ module gamerpaodekuai.page {
             this._feijiView = new ui.nqp.game_ui.paodekuai.component.Effect_feijiUI();
             this._bombView = new ui.nqp.game_ui.paodekuai.component.Effect_zhadanUI();
             this._fjdcbView = new ui.nqp.game_ui.paodekuai.component.Effect_fjdcbUI();   //飞机带翅膀
-            this._ksyxView = new ui.nqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI();  //开始游戏
+            this._ksyxView = new ui.ajqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI();  //开始游戏
             this._qgView = new ui.nqp.game_ui.paodekuai.component.Effect_quanguanUI();   //全关
             this._qgsbView = new ui.nqp.game_ui.paodekuai.component.Effect_qgsbUI();     //全关失败
             this._pageHandle = PageHandle.Get("PaodekuaiMapPage");//额外界面控制器
