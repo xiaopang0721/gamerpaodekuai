@@ -3,7 +3,7 @@
 */
 module gamerpaodekuai.page {
     export class RpaodekuaiRoomSettlePage extends game.gui.base.Page {
-        private _viewUI: ui.nqp.game_ui.paodekuai.JieSuan_FangKaUI;
+        private _viewUI: ui.ajqp.game_ui.paodekuai.JieSuan_FangKaUI;
         private _isGameEnd: boolean = false;  //是否结束
 
         constructor(v: Game, onOpenFunc?: Function, onCloseFunc?: Function) {
@@ -12,6 +12,7 @@ module gamerpaodekuai.page {
             this._isClickBlack = false;
             this._asset = [
                 PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "js.atlas",
             ];
         }
 
@@ -104,7 +105,7 @@ module gamerpaodekuai.page {
         }
     }
 
-    class ListRecordItem extends ui.nqp.game_ui.paodekuai.component.JieSuanRender2_pdkUI {
+    class ListRecordItem extends ui.ajqp.game_ui.paodekuai.component.JieSuanRender2_pdkUI {
         private _game: Game;
         private _data: any;
         setData(game: Game, data: any) {

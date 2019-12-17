@@ -20,13 +20,13 @@ module gamerpaodekuai.page {
     const MONEY_FLY_TIME = 50; // 金币飞行时间间隔
 
     export class RpaodekuaiMapPage extends game.gui.base.Page {
-        private _viewUI: ui.nqp.game_ui.paodekuai.PaoDeKuaiUI;
-        private _feijiView: ui.nqp.game_ui.paodekuai.component.Effect_feijiUI;  //飞机
-        private _bombView: ui.nqp.game_ui.paodekuai.component.Effect_zhadanUI;  //炸弹
-        private _fjdcbView: ui.nqp.game_ui.paodekuai.component.Effect_fjdcbUI;   //飞机带翅膀
+        private _viewUI: ui.ajqp.game_ui.paodekuai.PaoDeKuaiUI;
+        private _feijiView: ui.ajqp.game_ui.paodekuai.component.Effect_feijiUI;  //飞机
+        private _bombView: ui.ajqp.game_ui.paodekuai.component.Effect_zhadanUI;  //炸弹
+        private _fjdcbView: ui.ajqp.game_ui.paodekuai.component.Effect_fjdcbUI;   //飞机带翅膀
         private _ksyxView: ui.ajqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI;  //开始游戏
-        private _qgView: ui.nqp.game_ui.paodekuai.component.Effect_quanguanUI;      //全关
-        private _qgsbView: ui.nqp.game_ui.paodekuai.component.Effect_qgsbUI;         //全关失败
+        private _qgView: ui.ajqp.game_ui.paodekuai.component.Effect_quanguanUI;      //全关
+        private _qgsbView: ui.ajqp.game_ui.paodekuai.component.Effect_qgsbUI;         //全关失败
         private _mapInfo: RpaodekuaiMapInfo;
         private _paodekuaiMgr: RpaodekuaiMgr;
         private _paodekuaiStory: any;
@@ -75,28 +75,29 @@ module gamerpaodekuai.page {
             this._isNeedDuang = false;
             this._asset = [
                 DatingPath.atlas_dating_ui + "qifu.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
                 Path_game_rpaodekuai.atlas_game_ui + "paodekuai.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk + "qipai.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "quanguan.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "feiji.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "boom.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "jiesuan.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "px.atlas",
+                Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "qgsb.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "hud.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "touxiang.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "pai.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "qifu.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "fk.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "chongzhi.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong + "general/effect/fapai_1.atlas",
-                PathGameTongyong.atlas_game_ui_tongyong + "general/effect/xipai.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/quanguan.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/feiji.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/boom.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/jiesuan.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/px.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/effect/qgsb.atlas",
-                Path_game_rpaodekuai.atlas_game_ui + "paodekuai/qipai.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "jiaru.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "dating.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "logo.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "ksyx.atlas",
                 PathGameTongyong.atlas_game_ui_tongyong + "nyl.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "general/effect/fapai_1.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong + "general/effect/xipai.atlas",
+                PathGameTongyong.atlas_game_ui_tongyong_general + "anniu.atlas",
             ];
         }
 
@@ -104,12 +105,12 @@ module gamerpaodekuai.page {
         protected init(): void {
             this._viewUI = this.createView('game_ui.paodekuai.PaoDeKuaiUI');
             this.addChild(this._viewUI);
-            this._feijiView = new ui.nqp.game_ui.paodekuai.component.Effect_feijiUI();
-            this._bombView = new ui.nqp.game_ui.paodekuai.component.Effect_zhadanUI();
-            this._fjdcbView = new ui.nqp.game_ui.paodekuai.component.Effect_fjdcbUI();   //飞机带翅膀
+            this._feijiView = new ui.ajqp.game_ui.paodekuai.component.Effect_feijiUI();
+            this._bombView = new ui.ajqp.game_ui.paodekuai.component.Effect_zhadanUI();
+            this._fjdcbView = new ui.ajqp.game_ui.paodekuai.component.Effect_fjdcbUI();   //飞机带翅膀
             this._ksyxView = new ui.ajqp.game_ui.tongyong.effect.Effect_kaishiyouxiUI();  //开始游戏
-            this._qgView = new ui.nqp.game_ui.paodekuai.component.Effect_quanguanUI();   //全关
-            this._qgsbView = new ui.nqp.game_ui.paodekuai.component.Effect_qgsbUI();     //全关失败
+            this._qgView = new ui.ajqp.game_ui.paodekuai.component.Effect_quanguanUI();   //全关
+            this._qgsbView = new ui.ajqp.game_ui.paodekuai.component.Effect_qgsbUI();     //全关失败
             this._pageHandle = PageHandle.Get("PaodekuaiMapPage");//额外界面控制器
             if (!this._paodekuaiMgr) {
                 this._paodekuaiStory = this._game.sceneObjectMgr.story as RpaodekuaiStory;
@@ -121,11 +122,10 @@ module gamerpaodekuai.page {
         // 页面打开时执行函数
         protected onOpen(): void {
             super.onOpen();
-             //api充值不显示
+            //api充值不显示
             this._viewUI.btn_chongzhi.visible = !WebConfig.enterGameLocked;
-            
-            this.updateViewUI();
             this.onUpdateUnitOffline();
+            this.updateViewUI();
             if (this._paodekuaiStory instanceof gamecomponent.story.StoryRoomCardBase) {
                 this.onUpdateMapInfo();
             }
@@ -169,6 +169,36 @@ module gamerpaodekuai.page {
             this.setCardRoomBtnEvent(true);
         }
 
+        //假精灵数据
+        private onUpdateUnitOffline() {
+            if (!this._paodekuaiMgr.unitOffline) return;
+            let unitOffline = this._paodekuaiMgr.unitOffline;
+            let mPlayer = this._game.sceneObjectMgr.mainPlayer;
+            if (unitOffline) {
+                this._viewUI.view_player0.visible = true;
+                let money;
+                if (mPlayer) {
+                    money = mPlayer.playerInfo.money;
+                    this._viewUI.view_player0.txt_name.text = getMainPlayerName(mPlayer.playerInfo.nickname);
+                    this._viewUI.view_player0.img_head.skin = TongyongUtil.getHeadUrl(mPlayer.playerInfo.headimg);
+                    this._viewUI.view_player0.img_qifu.visible = TongyongUtil.getIsHaveQiFu(mPlayer, this._game.sync.serverTimeBys);
+                    //头像框
+                    this._viewUI.view_player0.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mPlayer.playerInfo.headKuang);
+                    this._viewUI.view_player0.img_vip.visible = mPlayer.playerInfo.vip_level > 0;
+                    this._viewUI.view_player0.img_vip.skin = TongyongUtil.getVipUrl(mPlayer.playerInfo.vip_level);
+                } else {
+                    money = unitOffline.GetMoney();
+                    this._viewUI.view_player0.txt_name.text = getMainPlayerName(unitOffline.GetName());
+                    this._viewUI.view_player0.img_head.skin = TongyongUtil.getHeadUrl(unitOffline.GetHeadImg());
+                    this._viewUI.view_player0.img_qifu.visible = TongyongUtil.getIsHaveQiFu(unitOffline, this._game.sync.serverTimeBys);
+                    //头像框
+                    this._viewUI.view_player0.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unitOffline.GetHeadKuangImg());
+                }
+                money = EnumToString.getPointBackNum(money, 2);
+                this._viewUI.view_player0.txt_money.text = money.toString();
+            }
+        }
+
         //打开时要处理的东西
         private updateViewUI(): void {
             this._bombNums = [0, 0, 0];
@@ -179,7 +209,6 @@ module gamerpaodekuai.page {
             this._viewUI.text_bd.visible = false;
             this._viewUI.img_menu.visible = false;
             this._viewUI.img_roomRule.visible = false;
-            this._viewUI.img_roomRule.x = -185;
             this._viewUI.box_btn.visible = false;
             this._viewUI.text_cardroomid.visible = true;
             this._viewUI.view_cardroom.visible = false;
@@ -247,8 +276,7 @@ module gamerpaodekuai.page {
         protected onBtnTweenEnd(e: LEvent, target: any) {
             switch (target) {
                 case this._viewUI.btn_menu:
-                    this._viewUI.img_menu.visible = true;
-                    this._viewUI.btn_menu.visible = false;
+                    this.menuTween(!this._viewUI.img_menu.visible);
                     break;
                 case this._viewUI.btn_back:
                     if (this._viewUI.btn_back.tag == 1) {
@@ -272,8 +300,7 @@ module gamerpaodekuai.page {
                     }
                     break;
                 case this._viewUI.btn_roomRule:
-                    this.ruleTween(true);
-                    this._viewUI.btn_roomRule.visible = false;
+                    this.ruleTween(!this._viewUI.img_roomRule.visible);
                     break;
                 case this._viewUI.btn_rules:
                     this._game.uiRoot.general.open(RpaodekuaiPageDef.PAGE_PDK_RULE);
@@ -384,15 +411,25 @@ module gamerpaodekuai.page {
 
         //点击任意地方关闭菜单
         protected onMouseClick(e: LEvent) {
-            if (e.currentTarget != this._viewUI.btn_menu) {
-                this._viewUI.img_menu.visible = false;
-                this._viewUI.btn_menu.visible = true;
+            if (e.target != this._viewUI.btn_menu) {
+                this.menuTween(false);
             }
-            if (e.currentTarget != this._viewUI.btn_roomRule) {
-                if (this._viewUI.img_roomRule.x == 5) {
-                    this.ruleTween(false);
-                    this._viewUI.btn_roomRule.visible = true;
-                }
+            if (e.target != this._viewUI.btn_roomRule) {
+                this.ruleTween(false);
+            }
+        }
+
+        //菜单栏
+        private menuTween(isOpen: boolean) {
+            if (isOpen) {
+                this._viewUI.img_menu.visible = true;
+                this._viewUI.img_menu.scale(0.2, 0.2);
+                this._viewUI.img_menu.alpha = 0;
+                Laya.Tween.to(this._viewUI.img_menu, { scaleX: 1, scaleY: 1, alpha: 1 }, 300, Laya.Ease.backInOut);
+            } else {
+                Laya.Tween.to(this._viewUI.img_menu, { scaleX: 0.2, scaleY: 0.2, alpha: 0 }, 300, Laya.Ease.backInOut, Handler.create(this, () => {
+                    this._viewUI.img_menu.visible = false;
+                }));
             }
         }
 
@@ -442,7 +479,7 @@ module gamerpaodekuai.page {
             for (let index = 0; index < this._unitCounts; index++) {
                 let posIdx = this.GetSeatFromUiPos(index);
                 let unit = this._game.sceneObjectMgr.getUnitByIdx(posIdx)
-                let viewPlayer: ui.nqp.game_ui.paodekuai.component.TouXiangUI = this._viewUI["view_player" + index];
+                let viewPlayer: ui.ajqp.game_ui.paodekuai.component.TouXiangUI = this._viewUI["view_player" + index];
                 viewPlayer.visible = unit;
                 if (unit) {
                     let name = getMainPlayerName(unit.GetName());
@@ -483,7 +520,7 @@ module gamerpaodekuai.page {
                                 viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                             })
                         }
-                         else {
+                        else {
                             viewPlayer.img_qifu.visible = true;
                             viewPlayer.img_head.skin = TongyongUtil.getHeadUrl(unit.GetHeadImg(), 2);
                         }
@@ -588,7 +625,7 @@ module gamerpaodekuai.page {
                     this.updateBattledInfo();
                     this.onUpdateMapState();
                     this.updateCountDown();
-                     this._toupiaoMgr.offLineReLogin();
+                    this._toupiaoMgr.offLineReLogin();
                 }
                 this.updateCardRoomDisplayInfo();
             }
@@ -602,53 +639,28 @@ module gamerpaodekuai.page {
                 let viewUILB = this._showUIlbArr[i];
                 viewUILB.y = this._showUIlbPosArr[i];
             }
-            if (this._showUIlbArr.length == 4) this._viewUI.img_roomRule.height = 251;
-            else if (this._showUIlbArr.length == 3) this._viewUI.img_roomRule.height = 226;
-            else if (this._showUIlbArr.length == 2) this._viewUI.img_roomRule.height = 205;
-            else if (this._showUIlbArr.length == 1) this._viewUI.img_roomRule.height = 185;
-            else if (this._showUIlbArr.length == 0) this._viewUI.img_roomRule.height = 164;
+            if (this._showUIlbArr.length == 4) this._viewUI.img_roomRule.height = 252;
+            else if (this._showUIlbArr.length == 3) this._viewUI.img_roomRule.height = 232;
+            else if (this._showUIlbArr.length == 2) this._viewUI.img_roomRule.height = 212;
+            else if (this._showUIlbArr.length == 1) this._viewUI.img_roomRule.height = 192;
+            else if (this._showUIlbArr.length == 0) this._viewUI.img_roomRule.height = 168;
         }
         //规则滑动页面
         private _roomRuleIsTween: boolean = false;
         private ruleTween(isShow: boolean): void {
             if (this._roomRuleIsTween) return;
-            this._roomRuleIsTween = true;
-            this._viewUI.img_roomRule.visible = true;
-            let curPos = isShow ? -185 : 5;
-            let targetPos = isShow ? 5 : -185;
-            this._viewUI.img_roomRule.x = curPos;
-            Laya.Tween.to(this._viewUI.img_roomRule, { x: targetPos }, 300, null, Handler.create(this, () => {
-                this._roomRuleIsTween = false;
-            }));
-        }
-
-        //假精灵数据
-        private onUpdateUnitOffline() {
-            if (!this._paodekuaiMgr.unitOffline) return;
-            let unitOffline = this._paodekuaiMgr.unitOffline;
-            let mPlayer = this._game.sceneObjectMgr.mainPlayer;
-            if (unitOffline) {
-                this._viewUI.view_player0.visible = true;
-                let money;
-                if (mPlayer) {
-                    money = mPlayer.playerInfo.money;
-                    this._viewUI.view_player0.txt_name.text = getMainPlayerName(mPlayer.playerInfo.nickname);
-                    this._viewUI.view_player0.img_head.skin = TongyongUtil.getHeadUrl(mPlayer.playerInfo.headimg, 2);
-                    this._viewUI.view_player0.img_qifu.visible = TongyongUtil.getIsHaveQiFu(mPlayer, this._game.sync.serverTimeBys);
-                    //头像框
-                    this._viewUI.view_player0.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(mPlayer.GetHeadKuangImg());
-                    this._viewUI.view_player0.img_vip.visible = mPlayer.playerInfo.vip_level > 0;
-                    this._viewUI.view_player0.img_vip.skin = TongyongUtil.getVipUrl(mPlayer.playerInfo.vip_level);
-                } else {
-                    money = unitOffline.GetMoney();
-                    this._viewUI.view_player0.txt_name.text = getMainPlayerName(unitOffline.GetName());
-                    this._viewUI.view_player0.img_head.skin = TongyongUtil.getHeadUrl(unitOffline.GetHeadImg(), 2);
-                    this._viewUI.view_player0.img_qifu.visible = TongyongUtil.getIsHaveQiFu(unitOffline, this._game.sync.serverTimeBys);
-                    //头像框
-                    this._viewUI.view_player0.img_txk.skin = TongyongUtil.getTouXiangKuangUrl(unitOffline.GetHeadKuangImg());
-                }
-                money = EnumToString.getPointBackNum(money, 2);
-                this._viewUI.view_player0.txt_money.text = money.toString();
+            if (isShow) {
+                this._viewUI.img_roomRule.visible = true;
+                this._viewUI.img_roomRule.scale(0.2, 0.2);
+                this._viewUI.img_roomRule.alpha = 0;
+                this._roomRuleIsTween = true;
+                Laya.Tween.to(this._viewUI.img_roomRule, { scaleX: 1, scaleY: 1, alpha: 1 }, 300, Laya.Ease.backInOut, Handler.create(this, () => {
+                    this._roomRuleIsTween = false;
+                }));
+            } else {
+                Laya.Tween.to(this._viewUI.img_roomRule, { scaleX: 0.2, scaleY: 0.2, alpha: 0 }, 300, Laya.Ease.backInOut, Handler.create(this, () => {
+                    this._viewUI.img_roomRule.visible = false;
+                }));
             }
         }
 
