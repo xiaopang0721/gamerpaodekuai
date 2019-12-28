@@ -22,22 +22,22 @@ module gamerpaodekuai {
             
             //加钱飘字
             this.ADD_MONEY_FONT = {
-                source: PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                source: PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 url: PathGameTongyong.ui_tongyong_general + 'clip_num1.png',
-                clipWidth: 25,
+                clipWidth: 28,
                 clipHeight: 32,
                 clipX: 11,
-                space: -8
+                space: 0
             };
 
             //扣钱飘字
             this.SUB_MONEY_FONT = {
-                source: PathGameTongyong.atlas_game_ui_tongyong+ "general.atlas",
+                source: PathGameTongyong.atlas_game_ui_tongyong + "general.atlas",
                 url: PathGameTongyong.ui_tongyong_general + 'clip_num.png',
-                clipWidth: 25,
+                clipWidth: 28,
                 clipHeight: 32,
                 clipX: 11,
-                space: -8
+                space: 0
             };
         }
         private _clip: ClipCell;

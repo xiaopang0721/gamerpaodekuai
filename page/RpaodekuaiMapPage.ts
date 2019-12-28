@@ -1962,8 +1962,6 @@ module gamerpaodekuai.page {
             let idx = mainUnit.GetIndex();
             let valueClip = value >= 0 ? new PaodekuaiClip(PaodekuaiClip.ADD_MONEY_FONT) : new PaodekuaiClip(PaodekuaiClip.SUB_MONEY_FONT);
             let preSkin = value >= 0 ? PathGameTongyong.ui_tongyong_general + "tu_jia.png" : PathGameTongyong.ui_tongyong_general + "tu_jian.png";
-            valueClip.scale(0.8, 0.8);
-            valueClip.anchorX = 0.5;
             let moneyStr = EnumToString.getPointBackNum(Math.abs(value), 2);
             valueClip.setText(moneyStr + "", true, false, preSkin);
             let index = (pos - idx + this._unitCounts) % this._unitCounts;

@@ -39,11 +39,11 @@ module gamerpaodekuai.manager {
 		private _isReDealCard: boolean = false;
 		private _totalUnitCount: number = 3;	// 玩家数量
 		private _centerPosTemp = [640, 450, 36];	//主玩家出牌中间那张牌的位置
-		private _centerPlayPosTemp = [670, 625, 50];	//主玩家手牌中间那张牌的位置
+		private _centerPlayPosTemp = [640, 625, 50];	//主玩家手牌中间那张牌的位置
 		private _playCardsPos1 = [[1040, 360, -22], [700, 170, 22], [240, 360, 22]];	//其他人出牌第一张位置,4人场
 		private _playCardsPos2 = [[1040, 360, -22], [240, 360, 22]];	//其他人出牌第一张位置,3人场
-		private _playFaPaiPos1 = [[169, 372], [1106, 375], [623, 186]];//其他人发牌位置，4人场
-		private _playFaPaiPos2 = [[169, 372], [1106, 375]];//其他人发牌位置，3人场
+		private _playFaPaiPos1 = [[171, 374], [1107, 375], [623, 185]];//其他人发牌位置，4人场
+		private _playFaPaiPos2 = [[171, 374], [1107, 375]];//其他人发牌位置，3人场
 
 		constructor(game: Game) {
 			super(game);
@@ -920,15 +920,18 @@ module gamerpaodekuai.manager {
 						cardsPos = cardsMainPos[i];
 					} else {
 						card = this.otherCards[i + (k * cardSingleCount)];
-						card.scaleX = 0.3;
-						card.scaleY = 0.3;
+						card.size = 0.2;
 						cardsPos = cardsOtherPos[k];
 					}
 					Laya.timer.once(50 * count, this, () => {
 						this._game.playSound(PathGameTongyong.music_tongyong + "fapai.mp3", false);
 						let posX = cardsPos[0];	//当前座位号的发牌位置
 						let posY = cardsPos[1];
-						card.mingpai(posX, posY);
+						if (k == this._totalUnitCount - 1) {
+							card.mingpai(posX, posY);
+						} else {
+							card.jiamingpai(posX, posY);
+						}
 						cardIndex++;
 						if (cardIndex >= cardSingleCount * this._totalUnitCount)
 							this.event(RpaodekuaiMgr.DEAL_CARDS);
