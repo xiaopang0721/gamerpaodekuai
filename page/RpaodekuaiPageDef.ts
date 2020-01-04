@@ -37,6 +37,7 @@ module gamerpaodekuai.page {
 				PathGameTongyong.atlas_game_ui_tongyong + "logo.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "ksyx.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "nyl.atlas",
+				PathGameTongyong.atlas_game_ui_tongyong + "yq.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "js.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "chongzhi.atlas",
 				PathGameTongyong.atlas_game_ui_tongyong + "general/effect/fapai_1.atlas",
