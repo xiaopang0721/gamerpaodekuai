@@ -74,7 +74,6 @@ module gamerpaodekuai.page {
             super(v, onOpenFunc, onCloseFunc);
             this._isNeedDuang = false;
             this._asset = [
-                DatingPath.atlas_dating_ui + "qifu.atlas",
                 Path_game_rpaodekuai.atlas_game_ui + "paodekuai.atlas",
                 Path_game_rpaodekuai.atlas_game_ui_pdk + "qipai.atlas",
                 Path_game_rpaodekuai.atlas_game_ui_pdk_effect + "quanguan.atlas",
